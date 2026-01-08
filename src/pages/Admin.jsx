@@ -18,7 +18,7 @@ const THEME_COLORS = {
 };
 
 const Admin = () => {
-    const { siteData, updateHero, aboutData, updateAbout, updateLecturers, updatePrograms } = useData();
+    const { siteData, updateHero, updateHomeSections, aboutData, updateAbout, updateLecturers, updatePrograms, updateNews } = useData();
     const [activeTab, setActiveTab] = useState('home');
 
     // --- State Home ---
@@ -26,11 +26,38 @@ const Admin = () => {
     const [homeDesc, setHomeDesc] = useState(siteData.heroDesc);
     const [homeImages, setHomeImages] = useState(siteData.heroImages || []);
 
+    // New Home States
+    const [adminStats, setAdminStats] = useState(siteData.stats || []);
+    const [adminNews, setAdminNews] = useState(siteData.news || []);
+    const [adminAgenda, setAdminAgenda] = useState(siteData.agenda || {});
+    const [adminLocation, setAdminLocation] = useState(siteData.location || {});
+
     const handleSaveHome = (e) => {
         e.preventDefault();
         updateHero(homeTitle, homeDesc, homeImages);
+        updateHomeSections({
+            stats: adminStats,
+            news: adminNews,
+            agenda: adminAgenda,
+            location: adminLocation
+        });
         alert("Data Home berhasil disimpan!");
     };
+
+    // Helpers for Home Sections
+    const handleStatChange = (index, field, value) => {
+        const newStats = [...adminStats];
+        newStats[index] = { ...newStats[index], [field]: value };
+        setAdminStats(newStats);
+    };
+
+    const handleNewsChange = (index, field, value) => {
+        const newNews = [...adminNews];
+        newNews[index] = { ...newNews[index], [field]: value };
+        setAdminNews(newNews);
+    };
+    const addNews = () => setAdminNews([...adminNews, { id: Date.now(), date: "", title: "", excerpt: "" }]);
+    const removeNews = (index) => setAdminNews(adminNews.filter((_, i) => i !== index));
 
     // --- State About ---
     // Initialize state only if aboutData exists to avoid errors on first render if data not ready
@@ -196,6 +223,12 @@ const Admin = () => {
                     >
                         Edit Program Studi
                     </button>
+                    <button
+                        onClick={() => setActiveTab('news')}
+                        className={`w-full text-left px-4 py-3 rounded transition-colors ${activeTab === 'news' ? 'bg-blue-800 text-white font-bold' : 'text-blue-200 hover:bg-blue-800/50'}`}
+                    >
+                        Kelola Berita
+                    </button>
                 </nav>
 
                 <div className="p-6 border-t border-blue-800">
@@ -208,34 +241,111 @@ const Admin = () => {
             {/* Main Content */}
             <div className="flex-1 overflow-y-auto p-10">
                 {activeTab === 'home' && (
-                    <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
-                        <h3 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-4">Edit Hero Section (Beranda)</h3>
-                        <form onSubmit={handleSaveHome} className="space-y-6">
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Judul Utama</label>
-                                <input type="text" value={homeTitle} onChange={(e) => setHomeTitle(e.target.value)} className="w-full p-2.5 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Deskripsi</label>
-                                <textarea rows="3" value={homeDesc} onChange={(e) => setHomeDesc(e.target.value)} className="w-full p-2.5 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
-                            </div>
+                    <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto space-y-10">
+                        <div className="flex justify-between items-center border-b pb-4">
+                            <h3 className="text-2xl font-bold text-gray-800">Edit Halaman Beranda</h3>
+                            <button onClick={handleSaveHome} className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center gap-2 font-bold"><Save size={18} /> Simpan Semua</button>
+                        </div>
 
-                            {/* Home Images Upload Logic (Keep existing logic, simplified here for brevity but logic remains same) */}
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Galeri Header</label>
-                                <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e.target.files[0], (res) => setHomeImages([...homeImages, res]))} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
-                                <div className="grid grid-cols-4 gap-4 mt-4">
-                                    {homeImages.map((img, i) => (
-                                        <div key={i} className="relative group h-24 rounded overflow-hidden">
-                                            <img src={img} className="w-full h-full object-cover" />
-                                            <button type="button" onClick={() => setHomeImages(homeImages.filter((_, idx) => idx !== i))} className="absolute inset-0 bg-red-500/80 text-white opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center font-bold">Hapus</button>
-                                        </div>
-                                    ))}
+                        {/* 1. Hero Section */}
+                        <section className="space-y-4">
+                            <h4 className="text-lg font-bold text-blue-900 bg-blue-50 p-2 rounded">1. Banner Utama (Hero)</h4>
+                            <form className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Judul Utama</label>
+                                    <input type="text" value={homeTitle} onChange={(e) => setHomeTitle(e.target.value)} className="w-full p-2 border rounded" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Deskripsi</label>
+                                    <textarea rows="3" value={homeDesc} onChange={(e) => setHomeDesc(e.target.value)} className="w-full p-2 border rounded" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Galeri Header</label>
+                                    <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e.target.files[0], (res) => setHomeImages([...homeImages, res]))} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:rounded-full file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                                    <div className="grid grid-cols-4 gap-4 mt-4">
+                                        {homeImages.map((img, i) => (
+                                            <div key={i} className="relative group h-24 rounded overflow-hidden">
+                                                <img src={img} className="w-full h-full object-cover" />
+                                                <button type="button" onClick={() => setHomeImages(homeImages.filter((_, idx) => idx !== i))} className="absolute inset-0 bg-red-500/80 text-white opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center font-bold">Hapus</button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </form>
+                        </section>
+
+                        {/* 2. Stats Section */}
+                        <section className="space-y-4 pt-6 border-t">
+                            <h4 className="text-lg font-bold text-blue-900 bg-blue-50 p-2 rounded">2. Sekilas Info (Keunggulan)</h4>
+                            {adminStats.map((stat, i) => (
+                                <div key={i} className="grid md:grid-cols-2 gap-4 border p-4 rounded bg-gray-50">
+                                    <div>
+                                        <label className="text-xs font-bold text-gray-500">Judul</label>
+                                        <input type="text" value={stat.title} onChange={(e) => handleStatChange(i, 'title', e.target.value)} className="w-full p-2 border rounded" />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-bold text-gray-500">Deskripsi</label>
+                                        <input type="text" value={stat.desc} onChange={(e) => handleStatChange(i, 'desc', e.target.value)} className="w-full p-2 border rounded" />
+                                    </div>
+                                </div>
+                            ))}
+                        </section>
+
+                        {/* 3. Berita Terbaru - Moved to specialized tab */}
+                        <section className="space-y-4 pt-6 border-t">
+                             <div className="bg-blue-50 border border-blue-200 p-4 rounded text-blue-800 text-sm">
+                                <strong>Info:</strong> Pengaturan Berita telah dipindahkan ke menu <strong>Kelola Berita</strong> di sidebar.
+                                Data berita di halaman depan akan otomatis diambil dari sana.
+                            </div>
+                        </section>
+
+                        {/* 4. Agenda Section */}
+                        <section className="space-y-4 pt-6 border-t">
+                            <h4 className="text-lg font-bold text-blue-900 bg-blue-50 p-2 rounded">4. Agenda Kampus</h4>
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Nama Agenda</label>
+                                    <input type="text" value={adminAgenda.title} onChange={(e) => setAdminAgenda({ ...adminAgenda, title: e.target.value })} className="w-full p-2 border rounded" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Tanggal</label>
+                                    <input type="text" value={adminAgenda.date} onChange={(e) => setAdminAgenda({ ...adminAgenda, date: e.target.value })} className="w-full p-2 border rounded" />
+                                </div>
+                                <div className="col-span-2">
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Lokasi</label>
+                                    <input type="text" value={adminAgenda.location} onChange={(e) => setAdminAgenda({ ...adminAgenda, location: e.target.value })} className="w-full p-2 border rounded" />
+                                </div>
+                                <div className="col-span-2">
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Deskripsi Singkat</label>
+                                    <textarea value={adminAgenda.desc} onChange={(e) => setAdminAgenda({ ...adminAgenda, desc: e.target.value })} className="w-full p-2 border rounded h-20" />
                                 </div>
                             </div>
+                        </section>
 
-                            <button type="submit" className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center gap-2 font-bold"><Save size={18} /> Simpan Perubahan</button>
-                        </form>
+                        {/* 5. Location Section */}
+                        <section className="space-y-4 pt-6 border-t">
+                            <h4 className="text-lg font-bold text-blue-900 bg-blue-50 p-2 rounded">5. Lokasi & Kontak</h4>
+                            <div className="grid gap-4">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Alamat</label>
+                                    <input type="text" value={adminLocation.address} onChange={(e) => setAdminLocation({ ...adminLocation, address: e.target.value })} className="w-full p-2 border rounded" />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">Telepon</label>
+                                        <input type="text" value={adminLocation.phone} onChange={(e) => setAdminLocation({ ...adminLocation, phone: e.target.value })} className="w-full p-2 border rounded" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">Email</label>
+                                        <input type="text" value={adminLocation.email} onChange={(e) => setAdminLocation({ ...adminLocation, email: e.target.value })} className="w-full p-2 border rounded" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Google Maps Embed URL</label>
+                                    <input type="text" value={adminLocation.mapUrl} onChange={(e) => setAdminLocation({ ...adminLocation, mapUrl: e.target.value })} className="w-full p-2 border rounded text-xs text-gray-500 font-mono" />
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 )}
 
@@ -438,6 +548,126 @@ const Admin = () => {
 
                             <button onClick={addProgram} className="w-full py-3 border-2 border-dashed border-blue-300 text-blue-600 font-bold rounded-lg hover:bg-blue-50 transition">
                                 + Tambah Program Baru
+                            </button>
+                        </div>
+                    </div>
+                )}
+            {activeTab === 'news' && (
+                    <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                        <div className="flex justify-between items-center border-b pb-6 mb-6">
+                            <h3 className="text-2xl font-bold text-gray-800">Kelola Berita & Artikel</h3>
+                            <button 
+                                onClick={() => {
+                                    updateNews(adminNews);
+                                    alert("Berita berhasil disimpan!");
+                                }} 
+                                className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center gap-2 font-bold"
+                            >
+                                <Save size={18} /> Simpan Perubahan
+                            </button>
+                        </div>
+
+                        <div className="space-y-6">
+                            {adminNews.map((item, i) => (
+                                <div key={i} className="border rounded-xl p-6 bg-gray-50 relative group">
+                                    <button 
+                                        onClick={() => {
+                                            if(window.confirm("Hapus berita ini?")) {
+                                                setAdminNews(adminNews.filter((_, idx) => idx !== i));
+                                            }
+                                        }} 
+                                        className="absolute top-4 right-4 text-red-400 hover:text-red-600 font-bold bg-white px-3 py-1 rounded shadow-sm border border-red-100"
+                                    >
+                                        Hapus
+                                    </button>
+
+                                    <div className="grid md:grid-cols-3 gap-6">
+                                        {/* Image Section */}
+                                        <div className="md:col-span-1">
+                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Gambar Sampul</label>
+                                            <div className="aspect-video bg-gray-200 rounded overflow-hidden relative group-image">
+                                                <img src={item.image || "https://via.placeholder.com/300x200"} className="w-full h-full object-cover" />
+                                                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
+                                                    <label className="cursor-pointer bg-white text-gray-900 text-xs px-3 py-1 rounded font-bold hover:bg-gray-100">
+                                                        Ubah Foto
+                                                        <input 
+                                                            type="file" 
+                                                            className="hidden" 
+                                                            accept="image/*" 
+                                                            onChange={(e) => handleImageUpload(e.target.files[0], (res) => handleNewsChange(i, 'image', res))} 
+                                                        />
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Content Section */}
+                                        <div className="md:col-span-2 space-y-4">
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal</label>
+                                                    <input 
+                                                        type="text" 
+                                                        value={item.date} 
+                                                        onChange={(e) => handleNewsChange(i, 'date', e.target.value)} 
+                                                        className="w-full p-2 border rounded text-sm" 
+                                                        placeholder="20 Des 2025" 
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Penulis</label>
+                                                    <input 
+                                                        type="text" 
+                                                        value={item.author || ""} 
+                                                        onChange={(e) => handleNewsChange(i, 'author', e.target.value)} 
+                                                        className="w-full p-2 border rounded text-sm" 
+                                                        placeholder="Humas" 
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Judul Berita</label>
+                                                <input 
+                                                    type="text" 
+                                                    value={item.title} 
+                                                    onChange={(e) => handleNewsChange(i, 'title', e.target.value)} 
+                                                    className="w-full p-2 border rounded font-bold text-blue-900" 
+                                                    placeholder="Judul Berita..." 
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Ringkasan (Daftar Depan)</label>
+                                                <textarea 
+                                                    rows="2" 
+                                                    value={item.excerpt} 
+                                                    onChange={(e) => handleNewsChange(i, 'excerpt', e.target.value)} 
+                                                    className="w-full p-2 border rounded text-sm" 
+                                                    placeholder="Ringkasan singkat untuk tampilan kartu..."
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Isi Berita Lengkap</label>
+                                                <textarea 
+                                                    rows="6" 
+                                                    value={item.content || ""} 
+                                                    onChange={(e) => handleNewsChange(i, 'content', e.target.value)} 
+                                                    className="w-full p-2 border rounded text-sm font-mono bg-white" 
+                                                    placeholder="Isi berita lengkap..."
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+
+                            <button 
+                                onClick={() => setAdminNews([{ id: Date.now(), date: "", title: "Berita Baru", excerpt: "", content: "", image: "", author: "" }, ...adminNews])} 
+                                className="w-full py-4 border-2 border-dashed border-blue-300 text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition flex items-center justify-center gap-2"
+                            >
+                                <LayoutDashboard size={20} /> Tambah Berita Baru
                             </button>
                         </div>
                     </div>

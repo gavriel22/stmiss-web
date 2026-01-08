@@ -3,6 +3,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Phone, Mail, Facebook, Instagram, Youtube, ChevronDown } from 'lucide-react';
 
+import logo from '../assets/logo-stmiss.png';
+
 export const Header = () => (
   <header className="w-full bg-white shadow-md fixed top-0 z-50">
     {/* Top Bar UKSW Style */}
@@ -18,7 +20,7 @@ export const Header = () => (
     {/* Main Nav */}
     <div className="container mx-auto px-4 py-4 flex justify-between items-center">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-blue-900 text-white flex items-center justify-center font-bold text-xl rounded">ST</div>
+        <img src={logo} alt="ST Missiologia Logo" className="w-12 h-12 object-contain" />
         <div>
           <h1 className="text-xl font-bold text-blue-900 leading-none">ST Missiologia</h1>
           <p className="text-xs text-gray-500 tracking-widest">YOGYAKARTA</p>
@@ -39,6 +41,7 @@ export const Header = () => (
           </div>
         </div>
         <Link to="/academic" className="hover:text-blue-900">Akademik</Link>
+        <Link to="/berita" className="hover:text-blue-900">Berita</Link>
         <Link to="/admission" className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 font-bold">Pendaftaran</Link>
       </nav>
     </div>

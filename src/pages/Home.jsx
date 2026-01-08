@@ -76,31 +76,30 @@ const Hero = ({ title, desc, images }) => {
 };
 
 // 2. Section Sekilas Info (Statistik / Keunggulan - Gaya Adaptif UKSW)
-const StatsSection = () => (
-    <section className="py-16 bg-white relative z-30 -mt-16 shadow-xl rounded-t-3xl container mx-auto px-4 max-w-6xl">
-        <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div className="flex flex-col items-center p-6 border-r border-gray-100 last:border-r-0 hover:bg-yellow-50 transition duration-300 cursor-pointer group">
-                <Link to="/kurikulum-kontekstual" className="flex flex-col items-center">
-                    <BookOpenText size={40} className="text-yellow-500 mb-4 group-hover:scale-110 transition" />
-                    <h3 className="text-xl font-bold text-blue-900 mb-2 group-hover:text-yellow-600 transition">Kurikulum Kontekstual</h3>
-                    <p className="text-gray-600 text-sm">Pendidikan teologi yang relevan dengan tantangan misi zaman ini.</p>
-                </Link>
+// 2. Section Sekilas Info
+const StatsSection = ({ stats }) => {
+    if (!stats) return null;
+    const icons = { "/kurikulum-kontekstual": BookOpenText, "/dosen": Users, "/admission": MapPin }; // Mapping rudimentary
+
+    return (
+        <section className="py-16 bg-white relative z-30 -mt-16 shadow-xl rounded-t-3xl container mx-auto px-4 max-w-6xl">
+            <div className="grid md:grid-cols-3 gap-8 text-center">
+                {stats.map((stat, index) => {
+                    const Icon = index === 0 ? BookOpenText : (index === 1 ? Users : MapPin); // Fallback icon mapping
+                    return (
+                        <div key={stat.id} className="flex flex-col items-center p-6 border-r border-gray-100 last:border-r-0 hover:bg-yellow-50 transition duration-300 cursor-pointer group">
+                            <Link to={stat.link || "#"} className="flex flex-col items-center">
+                                <Icon size={40} className="text-yellow-500 mb-4 group-hover:scale-110 transition" />
+                                <h3 className="text-xl font-bold text-blue-900 mb-2 group-hover:text-yellow-600 transition">{stat.title}</h3>
+                                <p className="text-gray-600 text-sm">{stat.desc}</p>
+                            </Link>
+                        </div>
+                    );
+                })}
             </div>
-            <div className="flex flex-col items-center p-6 border-r border-gray-100 last:border-r-0 hover:bg-yellow-50 transition duration-300 cursor-pointer group">
-                <Link to="/dosen" className="flex flex-col items-center">
-                    <Users size={40} className="text-yellow-500 mb-4 group-hover:scale-110 transition" />
-                    <h3 className="text-xl font-bold text-blue-900 mb-2 group-hover:text-yellow-600 transition">Dosen Berpengalaman</h3>
-                    <p className="text-gray-600 text-sm">Dibimbing oleh teolog dan praktisi misi lintas budaya.</p>
-                </Link>
-            </div>
-            <div className="flex flex-col items-center p-6 border-r border-gray-100 last:border-r-0">
-                <MapPin size={40} className="text-yellow-500 mb-4" />
-                <h3 className="text-xl font-bold text-blue-900 mb-2">Lokasi Strategis</h3>
-                <p className="text-gray-600 text-sm">Kampus yang kondusif di pusat budaya Yogyakarta.</p>
-            </div>
-        </div>
-    </section>
-);
+        </section>
+    );
+};
 
 // 3. Section Program Studi (Adaptasi Kartu Fakultas UKSW)
 const ProgramsSection = ({ programs }) => (
@@ -173,12 +172,9 @@ const LecturersSection = ({ lecturers }) => {
 
 // 4. Section Berita & Agenda (Adaptasi Seputar Berita / Agenda Kampus UKSW)
 // Menggunakan data dummy karena fokus pada layout utama.
-const NewsEventsSection = () => {
-    const news = [
-        { id: 1, date: '20 Des 2025', title: 'Wisuda Sarjana Teologi Angkatan ke-X' },
-        { id: 2, date: '15 Des 2025', title: 'Seminar Nasional: Misi di Era Digital' },
-        { id: 3, date: '10 Des 2025', title: 'Penerimaan Mahasiswa Baru Gelombang 1 Dibuka' },
-    ];
+// 4. Section Berita & Agenda
+const NewsEventsSection = ({ news, agenda }) => {
+    if (!news || !agenda) return null;
 
     return (
         <section className="py-20 bg-white">
@@ -197,7 +193,7 @@ const NewsEventsSection = () => {
                                     <h4 className="font-bold text-lg text-gray-800 hover:text-blue-900 cursor-pointer transition mb-1">
                                         {item.title}
                                     </h4>
-                                    <p className="text-sm text-gray-600">Sekilas informasi mengenai kegiatan kampus...</p>
+                                    <p className="text-sm text-gray-600">{item.excerpt}</p>
                                 </div>
                             </div>
                         ))}
@@ -212,14 +208,14 @@ const NewsEventsSection = () => {
                     <div>
                         <h2 className="text-3xl font-bold text-white mb-6">Agenda Kampus</h2>
                         <p className="text-blue-100 mb-8 leading-relaxed">
-                            Ikuti berbagai kegiatan akademik, seminar, dan persekutuan doa yang diselenggarakan oleh ST Missiologia Yogyakarta.
+                            {agenda.desc}
                         </p>
                     </div>
                     <div className="border-l-4 border-yellow-500 pl-6">
                         <span className="text-sm text-yellow-400 font-bold uppercase tracking-wider">Kegiatan Terdekat</span>
-                        <h4 className="text-2xl font-bold text-white mt-1">Seminar Internasional Teologi Misioner</h4>
+                        <h4 className="text-2xl font-bold text-white mt-1">{agenda.title}</h4>
                         <p className="text-blue-100 mt-2 text-sm flex items-center gap-2">
-                            <CalendarDays size={16} /> 15 Januari 2026 | <MapPin size={16} /> Aula Utama STMiss
+                            <CalendarDays size={16} /> {agenda.date} | <MapPin size={16} /> {agenda.location}
                         </p>
                     </div>
                 </div>
@@ -229,66 +225,70 @@ const NewsEventsSection = () => {
 };
 
 // 6. Section Lokasi Kampus
-const LocationSection = () => (
-    <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-blue-900 mb-4">Lokasi Kampus</h2>
-                <div className="w-16 h-1 bg-yellow-500 mx-auto"></div>
-                <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
-                    Kunjungi kampus kami yang terletak strategis di Yogyakarta.
-                </p>
-            </div>
+// 6. Section Lokasi Kampus
+const LocationSection = ({ location }) => {
+    if (!location) return null;
+    return (
+        <section className="py-20 bg-gray-50">
+            <div className="container mx-auto px-4">
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl font-bold text-blue-900 mb-4">Lokasi Kampus</h2>
+                    <div className="w-16 h-1 bg-yellow-500 mx-auto"></div>
+                    <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
+                        Kunjungi kampus kami yang terletak strategis di Yogyakarta.
+                    </p>
+                </div>
 
-            <div className="bg-white p-4 rounded-xl shadow-lg">
-                <div className="grid md:grid-cols-3 gap-8">
-                    {/* Info Lokasi */}
-                    <div className="p-6 md:col-span-1 space-y-6">
-                        <div className="flex items-start gap-4">
-                            <div className="bg-blue-100 p-3 rounded-full text-blue-900">
-                                <MapPin size={24} />
+                <div className="bg-white p-4 rounded-xl shadow-lg">
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {/* Info Lokasi */}
+                        <div className="p-6 md:col-span-1 space-y-6">
+                            <div className="flex items-start gap-4">
+                                <div className="bg-blue-100 p-3 rounded-full text-blue-900">
+                                    <MapPin size={24} />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-lg text-gray-800">Alamat</h4>
+                                    <p className="text-gray-600 mt-1">{location.address}</p>
+                                </div>
                             </div>
-                            <div>
-                                <h4 className="font-bold text-lg text-gray-800">Alamat</h4>
-                                <p className="text-gray-600 mt-1">Jl. Solo Km. 10.5, Kalasan, Yogyakarta, Indonesia</p>
+                            <div className="flex items-start gap-4">
+                                <div className="bg-blue-100 p-3 rounded-full text-blue-900">
+                                    <Phone size={24} />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-lg text-gray-800">Telepon</h4>
+                                    <p className="text-gray-600 mt-1">{location.phone}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-4">
+                                <div className="bg-blue-100 p-3 rounded-full text-blue-900">
+                                    <Mail size={24} />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-lg text-gray-800">Email</h4>
+                                    <p className="text-gray-600 mt-1">{location.email}</p>
+                                </div>
                             </div>
                         </div>
-                        <div className="flex items-start gap-4">
-                            <div className="bg-blue-100 p-3 rounded-full text-blue-900">
-                                <Phone size={24} />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-lg text-gray-800">Telepon</h4>
-                                <p className="text-gray-600 mt-1">(0274) 555-1234</p>
-                            </div>
-                        </div>
-                        <div className="flex items-start gap-4">
-                            <div className="bg-blue-100 p-3 rounded-full text-blue-900">
-                                <Mail size={24} />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-lg text-gray-800">Email</h4>
-                                <p className="text-gray-600 mt-1">info@stmiss.ac.id</p>
-                            </div>
-                        </div>
-                    </div>
 
-                    {/* Maps Embed */}
-                    <div className="md:col-span-2 h-[400px] bg-gray-200 rounded-lg overflow-hidden">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15812.55394145695!2d110.456637!3d-7.775871!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a5a1e2b5b5b5b%3A0x5b5b5b5b5b5b5b5b!2sYogyakarta!5e0!3m2!1sen!2sid!4v1625000000000!5m2!1sen!2sid"
-                            width="100%"
-                            height="100%"
-                            style={{ border: 0 }}
-                            allowFullScreen=""
-                            loading="lazy"
-                        ></iframe>
+                        {/* Maps Embed */}
+                        <div className="md:col-span-2 h-[400px] bg-gray-200 rounded-lg overflow-hidden">
+                            <iframe
+                                src={location.mapUrl}
+                                width="100%"
+                                height="100%"
+                                style={{ border: 0 }}
+                                allowFullScreen=""
+                                loading="lazy"
+                            ></iframe>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-);
+        </section>
+    );
+};
 
 // --- Komponen Halaman Utama Utama ---
 // 1. Perlu import Phone & Mail dari lucide-react jika belum (sudah di Header, tapi cek import di atas)
@@ -314,7 +314,7 @@ const Home = () => {
                 />
 
                 {/* Statistik / Keunggulan */}
-                <StatsSection />
+                <StatsSection stats={siteData.stats} />
 
                 {/* Daftar Program Studi */}
                 <ProgramsSection programs={siteData.programs} />
@@ -323,10 +323,10 @@ const Home = () => {
                 <LecturersSection lecturers={siteData.lecturers} />
 
                 {/* Berita & Agenda Kampus */}
-                <NewsEventsSection />
+                <NewsEventsSection news={siteData.news} agenda={siteData.agenda} />
 
                 {/* Lokasi Kampus */}
-                <LocationSection />
+                <LocationSection location={siteData.location} />
             </main>
 
             {/* Footer (Informasi & Kontak) */}
