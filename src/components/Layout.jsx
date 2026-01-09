@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Phone, Mail, Facebook, Instagram, Youtube, ChevronDown } from 'lucide-react';
 
-import logo from '../assets/logo-stmiss.png';
+import logo from '../assets/logo-stmiss.webp';
 
 export const Header = () => (
   <header className="w-full bg-white shadow-md fixed top-0 z-50">
