@@ -364,7 +364,7 @@ const Admin = () => {
                         <section className="space-y-4 pt-6 border-t">
                             <h4 className="text-lg font-bold text-blue-900 bg-blue-50 p-2 rounded">2. Sekilas Info (Keunggulan)</h4>
                             {adminStats.map((stat, i) => (
-                                <div key={i} className="grid md:grid-cols-2 gap-4 border p-4 rounded bg-gray-50">
+                                <div key={i} className="grid md:grid-cols-3 gap-4 border p-4 rounded bg-gray-50">
                                     <div>
                                         <label className="text-xs font-bold text-gray-500">Judul</label>
                                         <input type="text" value={stat.title} onChange={(e) => handleStatChange(i, 'title', e.target.value)} className="w-full p-2 border rounded" />
@@ -372,6 +372,10 @@ const Admin = () => {
                                     <div>
                                         <label className="text-xs font-bold text-gray-500">Deskripsi</label>
                                         <input type="text" value={stat.desc} onChange={(e) => handleStatChange(i, 'desc', e.target.value)} className="w-full p-2 border rounded" />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-bold text-gray-500">Link (contoh: #location atau /dosen)</label>
+                                        <input type="text" value={stat.link || ''} onChange={(e) => handleStatChange(i, 'link', e.target.value)} className="w-full p-2 border rounded font-mono text-sm" placeholder="#location" />
                                     </div>
                                 </div>
                             ))}

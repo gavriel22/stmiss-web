@@ -79,13 +79,13 @@ const Hero = ({ title, desc, images }) => {
 // 2. Section Sekilas Info
 const StatsSection = ({ stats }) => {
     if (!stats) return null;
-    const icons = { "/kurikulum-kontekstual": BookOpenText, "/dosen": Users, "/admission": MapPin }; // Mapping rudimentary
+    const icons = { "/kurikulum-kontekstual": BookOpenText, "/dosen": Users, "#location": MapPin }; // Mapping rudimentary
 
     return (
         <section className="py-16 bg-white relative z-30 -mt-16 shadow-xl rounded-t-3xl container mx-auto px-4 max-w-6xl">
             <div className="grid md:grid-cols-3 gap-8 text-center">
                 {stats.map((stat, index) => {
-                    const Icon = index === 0 ? BookOpenText : (index === 1 ? Users : MapPin); // Fallback icon mapping
+                    const Icon = index === 0 ? BookOpenText : (index === 1 ? Users : (index === 2 ? MapPin : Phone)); // Fallback icon mapping
                     return (
                         <div key={stat.id} className="flex flex-col items-center p-6 border-r border-gray-100 last:border-r-0 hover:bg-yellow-50 transition duration-300 cursor-pointer group">
                             {stat.link?.startsWith('#') ? (
