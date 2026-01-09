@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { DataProvider } from './context/DataContext';
 import Home from './pages/Home';
+import Login from './pages/Login';
 import Admin from './pages/Admin';
 import About from './pages/About';
 import Academic from './pages/Academic';
@@ -26,6 +27,7 @@ function App() {
           <Route path="/academic" element={<Academic />} />
           <Route path="/admission" element={<Admission />} />
           <Route path="/scholarship" element={<Scholarship />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/kurikulum-kontekstual" element={<ContextualCurriculum />} />
           <Route path="/dosen" element={<Lecturers />} />

@@ -1,8 +1,10 @@
 // src/pages/Admin.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useData } from '../context/DataContext';
-import { Link } from 'react-router-dom';
-import { Save, ArrowLeft, LayoutDashboard } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Save, ArrowLeft, LayoutDashboard, LogOut } from 'lucide-react';
+import { auth } from '../firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 const THEME_COLORS = {
     Blue: { value: "border-blue-900 bg-blue-50 text-blue-900", hex: "bg-blue-900" },
@@ -18,25 +20,105 @@ const THEME_COLORS = {
 };
 
 const Admin = () => {
+    // --- ALL HOOKS MUST BE AT THE TOP (before any conditional returns) ---
+    const navigate = useNavigate();
     const { siteData, updateHero, updateHomeSections, aboutData, updateAbout, updateLecturers, updatePrograms, updateNews, updateAgenda } = useData();
+
+    // Auth state
+    const [user, setUser] = useState(null);
+    const [authLoading, setAuthLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('home');
 
     // --- State Home ---
-    const [homeTitle, setHomeTitle] = useState(siteData.heroTitle);
-    const [homeDesc, setHomeDesc] = useState(siteData.heroDesc);
-    const [homeImages, setHomeImages] = useState(siteData.heroImages || []);
+    const [homeTitle, setHomeTitle] = useState(siteData?.heroTitle || '');
+    const [homeDesc, setHomeDesc] = useState(siteData?.heroDesc || '');
+    const [homeImages, setHomeImages] = useState(siteData?.heroImages || []);
+    const [adminStats, setAdminStats] = useState(siteData?.stats || []);
+    const [adminNews, setAdminNews] = useState(siteData?.news || []);
+    const [adminAgendaList, setAdminAgendaList] = useState(Array.isArray(siteData?.agenda) ? siteData.agenda : (siteData?.agenda ? [siteData.agenda] : []));
+    const [adminLocation, setAdminLocation] = useState(siteData?.location || {});
 
-    // New Home States
-    const [adminStats, setAdminStats] = useState(siteData.stats || []);
-    const [adminNews, setAdminNews] = useState(siteData.news || []);
-    // Agenda is now an array, defaulting to [] if undefined, or wrapping object if old data persists (handled in context, but good to be safe)
-    const [adminAgendaList, setAdminAgendaList] = useState(Array.isArray(siteData.agenda) ? siteData.agenda : (siteData.agenda ? [siteData.agenda] : []));
-    const [adminLocation, setAdminLocation] = useState(siteData.location || {});
+    // --- State About ---
+    const [aboutHero, setAboutHero] = useState(aboutData?.hero || {});
+    const [aboutHistory, setAboutHistory] = useState(aboutData?.history || {});
+    const [aboutVision, setAboutVision] = useState(aboutData?.vision || "");
+    const [aboutMission, setAboutMission] = useState(aboutData?.mission || []);
+    const [aboutLeaders, setAboutLeaders] = useState(aboutData?.leaders || []);
 
-    const handleSaveHome = (e) => {
+    // --- State Lecturers ---
+    const [adminLecturers, setAdminLecturers] = useState(siteData?.lecturers || []);
+
+    // --- State Programs ---
+    const [adminPrograms, setAdminPrograms] = useState(siteData?.programs || []);
+
+    // Check if user is logged in
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            if (currentUser) {
+                setUser(currentUser);
+            } else {
+                navigate('/login');
+            }
+            setAuthLoading(false);
+        });
+        return () => unsubscribe();
+    }, [navigate]);
+
+    // Sync state when siteData/aboutData changes (from Firestore real-time updates)
+    useEffect(() => {
+        if (siteData) {
+            setHomeTitle(siteData.heroTitle || '');
+            setHomeDesc(siteData.heroDesc || '');
+            setHomeImages(siteData.heroImages || []);
+            setAdminStats(siteData.stats || []);
+            setAdminNews(siteData.news || []);
+            setAdminAgendaList(Array.isArray(siteData.agenda) ? siteData.agenda : (siteData.agenda ? [siteData.agenda] : []));
+            setAdminLocation(siteData.location || {});
+            setAdminLecturers(siteData.lecturers || []);
+            setAdminPrograms(siteData.programs || []);
+        }
+    }, [siteData]);
+
+    useEffect(() => {
+        if (aboutData) {
+            setAboutHero(aboutData.hero || {});
+            setAboutHistory(aboutData.history || {});
+            setAboutVision(aboutData.vision || "");
+            setAboutMission(aboutData.mission || []);
+            setAboutLeaders(aboutData.leaders || []);
+        }
+    }, [aboutData]);
+
+    // --- CONDITIONAL RETURNS (after all hooks) ---
+
+    // Show loading while checking auth
+    if (authLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-100">
+                <div className="text-center">
+                    <div className="w-12 h-12 border-4 border-blue-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600">Memeriksa akses...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // If no user (shouldn't happen due to redirect, but safety net)
+    if (!user) return null;
+
+    // --- HANDLER FUNCTIONS ---
+    const handleLogout = async () => {
+        await signOut(auth);
+        navigate('/');
+    };
+
+    const handleSaveHome = async (e) => {
         e.preventDefault();
-        updateHero(homeTitle, homeDesc, homeImages);
-        updateHomeSections({
+        // Combine ALL home updates into a single Firestore write to avoid race conditions
+        await updateHomeSections({
+            heroTitle: homeTitle,
+            heroDesc: homeDesc,
+            heroImages: homeImages,
             stats: adminStats,
             news: adminNews,
             location: adminLocation
@@ -68,17 +150,9 @@ const Admin = () => {
     const addAgenda = () => setAdminAgendaList([...adminAgendaList, { id: Date.now(), date: "", title: "Agenda Baru", location: "", desc: "" }]);
     const removeAgenda = (index) => setAdminAgendaList(adminAgendaList.filter((_, i) => i !== index));
 
-    // --- State About ---
-    // Initialize state only if aboutData exists to avoid errors on first render if data not ready
-    const [aboutHero, setAboutHero] = useState(aboutData?.hero || {});
-    const [aboutHistory, setAboutHistory] = useState(aboutData?.history || {});
-    const [aboutVision, setAboutVision] = useState(aboutData?.vision || "");
-    const [aboutMission, setAboutMission] = useState(aboutData?.mission || []);
-    const [aboutLeaders, setAboutLeaders] = useState(aboutData?.leaders || []);
-
-    const handleSaveAbout = (e) => {
+    const handleSaveAbout = async (e) => {
         e.preventDefault();
-        updateAbout({
+        await updateAbout({
             hero: aboutHero,
             history: aboutHistory,
             vision: aboutVision,
@@ -88,12 +162,9 @@ const Admin = () => {
         alert("Data About berhasil disimpan!");
     }
 
-    // --- State Lecturers ---
-    const [adminLecturers, setAdminLecturers] = useState(siteData.lecturers || []);
-
-    const handleSaveLecturers = (e) => {
+    const handleSaveLecturers = async (e) => {
         e.preventDefault();
-        updateLecturers(adminLecturers);
+        await updateLecturers(adminLecturers);
         alert("Data Dosen berhasil disimpan!");
     };
 
@@ -140,12 +211,9 @@ const Admin = () => {
         }
     };
 
-    // --- State Programs ---
-    const [adminPrograms, setAdminPrograms] = useState(siteData.programs || []);
-
-    const handleSavePrograms = (e) => {
+    const handleSavePrograms = async (e) => {
         e.preventDefault();
-        updatePrograms(adminPrograms);
+        await updatePrograms(adminPrograms);
         alert("Data Program Studi berhasil disimpan!");
     };
 
@@ -246,10 +314,13 @@ const Admin = () => {
                     </button>
                 </nav>
 
-                <div className="p-6 border-t border-blue-800">
+                <div className="p-6 border-t border-blue-800 space-y-3">
                     <Link to="/" className="flex items-center gap-2 hover:text-white text-blue-300 transition-colors">
                         <ArrowLeft size={16} /> Kembali ke Web
                     </Link>
+                    <button onClick={handleLogout} className="flex items-center gap-2 hover:text-red-300 text-blue-300 transition-colors w-full">
+                        <LogOut size={16} /> Keluar (Logout)
+                    </button>
                 </div>
             </div>
 
