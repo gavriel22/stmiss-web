@@ -25,7 +25,7 @@ const DEFAULT_SITE_DATA = {
   stats: [
     { id: 1, title: "Kurikulum Kontekstual", desc: "Pendidikan teologi yang relevan dengan tantangan misi zaman ini.", link: "/kurikulum-kontekstual" },
     { id: 2, title: "Dosen Berpengalaman", desc: "Dibimbing oleh teolog dan praktisi misi lintas budaya.", link: "/dosen" },
-    { id: 3, title: "Lokasi Strategis", desc: "Kampus yang kondusif di pusat budaya Yogyakarta.", link: "/admission" }
+    { id: 3, title: "Lokasi Strategis", desc: "Kampus yang kondusif di pusat budaya Yogyakarta.", link: "#location" }
   ],
   news: [
     { id: 1, date: '20 Des 2025', title: 'Wisuda Sarjana Teologi Angkatan ke-X', excerpt: 'ST Missiologia kembali meluluskan 50 wisudawan terbaik yang siap melayani di berbagai ladang misi.', content: "Yogyakarta, 20 Desember 2025 – Sekolah Tinggi Missiologia kembali menggelar Rapat Senat Terbuka dalam rangka Wisuda Sarjana Teologi Angkatan ke-X.", image: "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80", author: "Humas STMiss" },

@@ -88,11 +88,19 @@ const StatsSection = ({ stats }) => {
                     const Icon = index === 0 ? BookOpenText : (index === 1 ? Users : MapPin); // Fallback icon mapping
                     return (
                         <div key={stat.id} className="flex flex-col items-center p-6 border-r border-gray-100 last:border-r-0 hover:bg-yellow-50 transition duration-300 cursor-pointer group">
-                            <Link to={stat.link || "#"} className="flex flex-col items-center">
-                                <Icon size={40} className="text-yellow-500 mb-4 group-hover:scale-110 transition" />
-                                <h3 className="text-xl font-bold text-blue-900 mb-2 group-hover:text-yellow-600 transition">{stat.title}</h3>
-                                <p className="text-gray-600 text-sm">{stat.desc}</p>
-                            </Link>
+                            {stat.link?.startsWith('#') ? (
+                                <a href={stat.link} className="flex flex-col items-center">
+                                    <Icon size={40} className="text-yellow-500 mb-4 group-hover:scale-110 transition" />
+                                    <h3 className="text-xl font-bold text-blue-900 mb-2 group-hover:text-yellow-600 transition">{stat.title}</h3>
+                                    <p className="text-gray-600 text-sm">{stat.desc}</p>
+                                </a>
+                            ) : (
+                                <Link to={stat.link || "#"} className="flex flex-col items-center">
+                                    <Icon size={40} className="text-yellow-500 mb-4 group-hover:scale-110 transition" />
+                                    <h3 className="text-xl font-bold text-blue-900 mb-2 group-hover:text-yellow-600 transition">{stat.title}</h3>
+                                    <p className="text-gray-600 text-sm">{stat.desc}</p>
+                                </Link>
+                            )}
                         </div>
                     );
                 })}
@@ -161,7 +169,7 @@ const LecturersSection = ({ lecturers }) => {
                 </div>
 
                 <div className="text-center mt-12">
-                    <Link to="/program-studi" className="inline-flex items-center gap-2 text-blue-900 font-bold hover:text-yellow-600 transition">
+                    <Link to="/dosen" className="inline-flex items-center gap-2 text-blue-900 font-bold hover:text-yellow-600 transition">
                         Lihat Selengkapnya <ArrowRight size={18} />
                     </Link>
                 </div>
@@ -246,7 +254,7 @@ const NewsEventsSection = ({ news, agenda }) => {
 const LocationSection = ({ location }) => {
     if (!location) return null;
     return (
-        <section className="py-20 bg-gray-50">
+        <section id="location" className="py-20 bg-gray-50">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-12">
                     <h2 className="text-3xl font-bold text-blue-900 mb-4">Lokasi Kampus</h2>
