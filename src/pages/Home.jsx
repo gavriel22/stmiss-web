@@ -22,7 +22,7 @@ const Hero = ({ title, desc, images }) => {
     const currentImage = images && images.length > 0 ? images[currentIndex] : "";
 
     return (
-        <section className="relative h-[550px] flex items-center mt-[105px] bg-blue-900 overflow-hidden">
+        <section className="relative min-h-[550px] flex items-center mt-[105px] bg-blue-900 overflow-hidden py-20">
             {/* Background Image with Fade Effect */}
             {images && images.map((img, index) => (
                 <div
@@ -123,9 +123,9 @@ const ProgramsSection = ({ programs }) => (
                             <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-blue-900 transition duration-300">
                                 {prog.title}
                             </h3>
-                            <p className="text-gray-600 mb-8 leading-relaxed flex-grow">
+                            {/* <p className="text-gray-600 mb-8 leading-relaxed flex-grow">
                                 {prog.desc}
-                            </p>
+                            </p> */}
                         </div>
                     </div>
                 ))}
