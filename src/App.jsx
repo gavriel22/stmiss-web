@@ -14,6 +14,7 @@ import Lecturers from './pages/Lecturers';
 import Programs from './pages/Programs';
 import News from './pages/News';
 import NewsDetail from './pages/NewsDetail';
+import Agenda from './pages/Agenda';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/program-studi" element={<Programs />} />
           <Route path="/berita" element={<News />} />
           <Route path="/berita/:id" element={<NewsDetail />} />
+          <Route path="/agenda" element={<Agenda />} />
         </Routes>
       </Router>
     </DataProvider>

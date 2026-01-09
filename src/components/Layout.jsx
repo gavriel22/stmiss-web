@@ -41,7 +41,15 @@ export const Header = () => (
           </div>
         </div>
         <Link to="/academic" className="hover:text-blue-900">Akademik</Link>
-        <Link to="/berita" className="hover:text-blue-900">Berita</Link>
+        <div className="group relative">
+          <button className="flex items-center gap-1 hover:text-blue-900 focus:outline-none py-4">
+            Informasi <ChevronDown size={16} />
+          </button>
+          <div className="absolute top-full left-0 w-48 bg-white shadow-lg rounded-lg overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50 border border-gray-100">
+            <Link to="/berita" className="block px-4 py-3 hover:bg-yellow-50 hover:text-blue-900 border-b border-gray-50 last:border-0 text-sm">Berita</Link>
+            <Link to="/agenda" className="block px-4 py-3 hover:bg-yellow-50 hover:text-blue-900 text-sm">Agenda Kampus</Link>
+          </div>
+        </div>
         <Link to="/admission" className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 font-bold">Pendaftaran</Link>
       </nav>
     </div>

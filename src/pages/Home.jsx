@@ -176,6 +176,10 @@ const LecturersSection = ({ lecturers }) => {
 const NewsEventsSection = ({ news, agenda }) => {
     if (!news || !agenda) return null;
 
+    // Handle Agenda: if array, take the first item. If object, use as is.
+    // Also handle empty array case.
+    const featuredAgenda = Array.isArray(agenda) ? (agenda.length > 0 ? agenda[0] : null) : agenda;
+
     return (
         <section className="py-20 bg-white">
             <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12">
@@ -183,7 +187,7 @@ const NewsEventsSection = ({ news, agenda }) => {
                 <div>
                     <h2 className="text-3xl font-bold text-blue-900 mb-8">Berita Terbaru</h2>
                     <div className="space-y-6">
-                        {news.map(item => (
+                        {news.slice(0, 3).map(item => (
                             <div key={item.id} className="flex gap-4 items-start border-b border-gray-100 pb-6 last:border-b-0">
                                 <div className="bg-blue-50 text-blue-900 p-3 rounded-lg text-center min-w-[70px]">
                                     <CalendarDays size={24} className="mx-auto mb-1" />
@@ -198,26 +202,39 @@ const NewsEventsSection = ({ news, agenda }) => {
                             </div>
                         ))}
                     </div>
-                    <button className="mt-8 text-blue-900 font-bold flex items-center gap-2 hover:text-yellow-600">
+                    <Link to="/berita" className="mt-8 text-blue-900 font-bold flex items-center gap-2 hover:text-yellow-600 inline-flex">
                         Lihat Semua Berita <ArrowRight size={18} />
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Kolom Agenda */}
-                <div className="bg-blue-900 p-10 rounded-3xl text-white flex flex-col justify-between">
-                    <div>
-                        <h2 className="text-3xl font-bold text-white mb-6">Agenda Kampus</h2>
-                        <p className="text-blue-100 mb-8 leading-relaxed">
-                            {agenda.desc}
-                        </p>
-                    </div>
-                    <div className="border-l-4 border-yellow-500 pl-6">
-                        <span className="text-sm text-yellow-400 font-bold uppercase tracking-wider">Kegiatan Terdekat</span>
-                        <h4 className="text-2xl font-bold text-white mt-1">{agenda.title}</h4>
-                        <p className="text-blue-100 mt-2 text-sm flex items-center gap-2">
-                            <CalendarDays size={16} /> {agenda.date} | <MapPin size={16} /> {agenda.location}
-                        </p>
-                    </div>
+                <div className="bg-blue-900 p-10 rounded-3xl text-white flex flex-col justify-between relative overflow-hidden group">
+                    <Link to="/agenda" className="absolute inset-0 z-10 block" aria-label="Lihat Semua Agenda"></Link>
+
+                    {featuredAgenda ? (
+                        <>
+                            <div>
+                                <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                                    Agenda Kampus <ArrowRight className="opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:translate-x-1" size={24} />
+                                </h2>
+                                <p className="text-blue-100 mb-8 leading-relaxed">
+                                    {featuredAgenda.desc}
+                                </p>
+                            </div>
+                            <div className="border-l-4 border-yellow-500 pl-6 relative z-20 pointer-events-none">
+                                <span className="text-sm text-yellow-400 font-bold uppercase tracking-wider">Kegiatan Terdekat</span>
+                                <h4 className="text-2xl font-bold text-white mt-1">{featuredAgenda.title}</h4>
+                                <p className="text-blue-100 mt-2 text-sm flex items-center gap-2">
+                                    <CalendarDays size={16} /> {featuredAgenda.date} | <MapPin size={16} /> {featuredAgenda.location}
+                                </p>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center h-full text-blue-200">
+                            <CalendarDays size={48} className="mb-4 opacity-50" />
+                            <p>Belum ada agenda terdekat.</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </section>

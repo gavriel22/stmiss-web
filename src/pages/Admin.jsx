@@ -18,7 +18,7 @@ const THEME_COLORS = {
 };
 
 const Admin = () => {
-    const { siteData, updateHero, updateHomeSections, aboutData, updateAbout, updateLecturers, updatePrograms, updateNews } = useData();
+    const { siteData, updateHero, updateHomeSections, aboutData, updateAbout, updateLecturers, updatePrograms, updateNews, updateAgenda } = useData();
     const [activeTab, setActiveTab] = useState('home');
 
     // --- State Home ---
@@ -29,7 +29,8 @@ const Admin = () => {
     // New Home States
     const [adminStats, setAdminStats] = useState(siteData.stats || []);
     const [adminNews, setAdminNews] = useState(siteData.news || []);
-    const [adminAgenda, setAdminAgenda] = useState(siteData.agenda || {});
+    // Agenda is now an array, defaulting to [] if undefined, or wrapping object if old data persists (handled in context, but good to be safe)
+    const [adminAgendaList, setAdminAgendaList] = useState(Array.isArray(siteData.agenda) ? siteData.agenda : (siteData.agenda ? [siteData.agenda] : []));
     const [adminLocation, setAdminLocation] = useState(siteData.location || {});
 
     const handleSaveHome = (e) => {
@@ -38,7 +39,6 @@ const Admin = () => {
         updateHomeSections({
             stats: adminStats,
             news: adminNews,
-            agenda: adminAgenda,
             location: adminLocation
         });
         alert("Data Home berhasil disimpan!");
@@ -58,6 +58,15 @@ const Admin = () => {
     };
     const addNews = () => setAdminNews([...adminNews, { id: Date.now(), date: "", title: "", excerpt: "" }]);
     const removeNews = (index) => setAdminNews(adminNews.filter((_, i) => i !== index));
+
+    // --- State Agenda List ---
+    const handleAgendaChange = (index, field, value) => {
+        const newAgenda = [...adminAgendaList];
+        newAgenda[index] = { ...newAgenda[index], [field]: value };
+        setAdminAgendaList(newAgenda);
+    };
+    const addAgenda = () => setAdminAgendaList([...adminAgendaList, { id: Date.now(), date: "", title: "Agenda Baru", location: "", desc: "" }]);
+    const removeAgenda = (index) => setAdminAgendaList(adminAgendaList.filter((_, i) => i !== index));
 
     // --- State About ---
     // Initialize state only if aboutData exists to avoid errors on first render if data not ready
@@ -229,6 +238,12 @@ const Admin = () => {
                     >
                         Kelola Berita
                     </button>
+                    <button
+                        onClick={() => setActiveTab('agenda')}
+                        className={`w-full text-left px-4 py-3 rounded transition-colors ${activeTab === 'agenda' ? 'bg-blue-800 text-white font-bold' : 'text-blue-200 hover:bg-blue-800/50'}`}
+                    >
+                        Kelola Agenda
+                    </button>
                 </nav>
 
                 <div className="p-6 border-t border-blue-800">
@@ -293,32 +308,16 @@ const Admin = () => {
 
                         {/* 3. Berita Terbaru - Moved to specialized tab */}
                         <section className="space-y-4 pt-6 border-t">
-                             <div className="bg-blue-50 border border-blue-200 p-4 rounded text-blue-800 text-sm">
+                            <div className="bg-blue-50 border border-blue-200 p-4 rounded text-blue-800 text-sm">
                                 <strong>Info:</strong> Pengaturan Berita telah dipindahkan ke menu <strong>Kelola Berita</strong> di sidebar.
                                 Data berita di halaman depan akan otomatis diambil dari sana.
                             </div>
                         </section>
 
-                        {/* 4. Agenda Section */}
+                        {/* 4. Agenda Section - Moved to specialized tab */}
                         <section className="space-y-4 pt-6 border-t">
-                            <h4 className="text-lg font-bold text-blue-900 bg-blue-50 p-2 rounded">4. Agenda Kampus</h4>
-                            <div className="grid md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Nama Agenda</label>
-                                    <input type="text" value={adminAgenda.title} onChange={(e) => setAdminAgenda({ ...adminAgenda, title: e.target.value })} className="w-full p-2 border rounded" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Tanggal</label>
-                                    <input type="text" value={adminAgenda.date} onChange={(e) => setAdminAgenda({ ...adminAgenda, date: e.target.value })} className="w-full p-2 border rounded" />
-                                </div>
-                                <div className="col-span-2">
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Lokasi</label>
-                                    <input type="text" value={adminAgenda.location} onChange={(e) => setAdminAgenda({ ...adminAgenda, location: e.target.value })} className="w-full p-2 border rounded" />
-                                </div>
-                                <div className="col-span-2">
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Deskripsi Singkat</label>
-                                    <textarea value={adminAgenda.desc} onChange={(e) => setAdminAgenda({ ...adminAgenda, desc: e.target.value })} className="w-full p-2 border rounded h-20" />
-                                </div>
+                            <div className="bg-blue-50 border border-blue-200 p-4 rounded text-blue-800 text-sm">
+                                <strong>Info:</strong> Pengaturan Agenda telah dipindahkan ke menu <strong>Kelola Agenda</strong> di sidebar.
                             </div>
                         </section>
 
@@ -552,15 +551,15 @@ const Admin = () => {
                         </div>
                     </div>
                 )}
-            {activeTab === 'news' && (
+                {activeTab === 'news' && (
                     <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
                         <div className="flex justify-between items-center border-b pb-6 mb-6">
                             <h3 className="text-2xl font-bold text-gray-800">Kelola Berita & Artikel</h3>
-                            <button 
+                            <button
                                 onClick={() => {
                                     updateNews(adminNews);
                                     alert("Berita berhasil disimpan!");
-                                }} 
+                                }}
                                 className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center gap-2 font-bold"
                             >
                                 <Save size={18} /> Simpan Perubahan
@@ -570,12 +569,12 @@ const Admin = () => {
                         <div className="space-y-6">
                             {adminNews.map((item, i) => (
                                 <div key={i} className="border rounded-xl p-6 bg-gray-50 relative group">
-                                    <button 
+                                    <button
                                         onClick={() => {
-                                            if(window.confirm("Hapus berita ini?")) {
+                                            if (window.confirm("Hapus berita ini?")) {
                                                 setAdminNews(adminNews.filter((_, idx) => idx !== i));
                                             }
-                                        }} 
+                                        }}
                                         className="absolute top-4 right-4 text-red-400 hover:text-red-600 font-bold bg-white px-3 py-1 rounded shadow-sm border border-red-100"
                                     >
                                         Hapus
@@ -590,11 +589,11 @@ const Admin = () => {
                                                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
                                                     <label className="cursor-pointer bg-white text-gray-900 text-xs px-3 py-1 rounded font-bold hover:bg-gray-100">
                                                         Ubah Foto
-                                                        <input 
-                                                            type="file" 
-                                                            className="hidden" 
-                                                            accept="image/*" 
-                                                            onChange={(e) => handleImageUpload(e.target.files[0], (res) => handleNewsChange(i, 'image', res))} 
+                                                        <input
+                                                            type="file"
+                                                            className="hidden"
+                                                            accept="image/*"
+                                                            onChange={(e) => handleImageUpload(e.target.files[0], (res) => handleNewsChange(i, 'image', res))}
                                                         />
                                                     </label>
                                                 </div>
@@ -606,55 +605,55 @@ const Admin = () => {
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div>
                                                     <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal</label>
-                                                    <input 
-                                                        type="text" 
-                                                        value={item.date} 
-                                                        onChange={(e) => handleNewsChange(i, 'date', e.target.value)} 
-                                                        className="w-full p-2 border rounded text-sm" 
-                                                        placeholder="20 Des 2025" 
+                                                    <input
+                                                        type="text"
+                                                        value={item.date}
+                                                        onChange={(e) => handleNewsChange(i, 'date', e.target.value)}
+                                                        className="w-full p-2 border rounded text-sm"
+                                                        placeholder="20 Des 2025"
                                                     />
                                                 </div>
                                                 <div>
                                                     <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Penulis</label>
-                                                    <input 
-                                                        type="text" 
-                                                        value={item.author || ""} 
-                                                        onChange={(e) => handleNewsChange(i, 'author', e.target.value)} 
-                                                        className="w-full p-2 border rounded text-sm" 
-                                                        placeholder="Humas" 
+                                                    <input
+                                                        type="text"
+                                                        value={item.author || ""}
+                                                        onChange={(e) => handleNewsChange(i, 'author', e.target.value)}
+                                                        className="w-full p-2 border rounded text-sm"
+                                                        placeholder="Humas"
                                                     />
                                                 </div>
                                             </div>
 
                                             <div>
                                                 <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Judul Berita</label>
-                                                <input 
-                                                    type="text" 
-                                                    value={item.title} 
-                                                    onChange={(e) => handleNewsChange(i, 'title', e.target.value)} 
-                                                    className="w-full p-2 border rounded font-bold text-blue-900" 
-                                                    placeholder="Judul Berita..." 
+                                                <input
+                                                    type="text"
+                                                    value={item.title}
+                                                    onChange={(e) => handleNewsChange(i, 'title', e.target.value)}
+                                                    className="w-full p-2 border rounded font-bold text-blue-900"
+                                                    placeholder="Judul Berita..."
                                                 />
                                             </div>
 
                                             <div>
                                                 <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Ringkasan (Daftar Depan)</label>
-                                                <textarea 
-                                                    rows="2" 
-                                                    value={item.excerpt} 
-                                                    onChange={(e) => handleNewsChange(i, 'excerpt', e.target.value)} 
-                                                    className="w-full p-2 border rounded text-sm" 
+                                                <textarea
+                                                    rows="2"
+                                                    value={item.excerpt}
+                                                    onChange={(e) => handleNewsChange(i, 'excerpt', e.target.value)}
+                                                    className="w-full p-2 border rounded text-sm"
                                                     placeholder="Ringkasan singkat untuk tampilan kartu..."
                                                 />
                                             </div>
 
                                             <div>
                                                 <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Isi Berita Lengkap</label>
-                                                <textarea 
-                                                    rows="6" 
-                                                    value={item.content || ""} 
-                                                    onChange={(e) => handleNewsChange(i, 'content', e.target.value)} 
-                                                    className="w-full p-2 border rounded text-sm font-mono bg-white" 
+                                                <textarea
+                                                    rows="6"
+                                                    value={item.content || ""}
+                                                    onChange={(e) => handleNewsChange(i, 'content', e.target.value)}
+                                                    className="w-full p-2 border rounded text-sm font-mono bg-white"
                                                     placeholder="Isi berita lengkap..."
                                                 />
                                             </div>
@@ -663,11 +662,94 @@ const Admin = () => {
                                 </div>
                             ))}
 
-                            <button 
-                                onClick={() => setAdminNews([{ id: Date.now(), date: "", title: "Berita Baru", excerpt: "", content: "", image: "", author: "" }, ...adminNews])} 
+                            <button
+                                onClick={() => setAdminNews([{ id: Date.now(), date: "", title: "Berita Baru", excerpt: "", content: "", image: "", author: "" }, ...adminNews])}
                                 className="w-full py-4 border-2 border-dashed border-blue-300 text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition flex items-center justify-center gap-2"
                             >
                                 <LayoutDashboard size={20} /> Tambah Berita Baru
+                            </button>
+                        </div>
+                    </div>
+                )}
+                {activeTab === 'agenda' && (
+                    <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                        <div className="flex justify-between items-center border-b pb-6 mb-6">
+                            <h3 className="text-2xl font-bold text-gray-800">Kelola Agenda Kampus</h3>
+                            <button
+                                onClick={() => {
+                                    updateAgenda(adminAgendaList);
+                                    alert("Agenda berhasil disimpan!");
+                                }}
+                                className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center gap-2 font-bold"
+                            >
+                                <Save size={18} /> Simpan Perubahan
+                            </button>
+                        </div>
+
+                        <div className="space-y-6">
+                            {adminAgendaList.map((item, i) => (
+                                <div key={i} className="border rounded-xl p-6 bg-gray-50 relative group">
+                                    <button
+                                        onClick={() => {
+                                            if (window.confirm("Hapus agenda ini?")) {
+                                                setAdminAgendaList(adminAgendaList.filter((_, idx) => idx !== i));
+                                            }
+                                        }}
+                                        className="absolute top-4 right-4 text-red-400 hover:text-red-600 font-bold bg-white px-3 py-1 rounded shadow-sm border border-red-100"
+                                    >
+                                        Hapus
+                                    </button>
+
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Agenda / Kegiatan</label>
+                                            <input
+                                                type="text"
+                                                value={item.title}
+                                                onChange={(e) => handleAgendaChange(i, 'title', e.target.value)}
+                                                className="w-full p-2 border rounded font-bold text-blue-900"
+                                                placeholder="Judul Agenda..."
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal</label>
+                                            <input
+                                                type="text"
+                                                value={item.date}
+                                                onChange={(e) => handleAgendaChange(i, 'date', e.target.value)}
+                                                className="w-full p-2 border rounded text-sm"
+                                                placeholder="Contoh: 15 Januari 2026"
+                                            />
+                                        </div>
+                                        <div className="md:col-span-2">
+                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Lokasi</label>
+                                            <input
+                                                type="text"
+                                                value={item.location}
+                                                onChange={(e) => handleAgendaChange(i, 'location', e.target.value)}
+                                                className="w-full p-2 border rounded text-sm"
+                                                placeholder="Tempat pelaksanaan..."
+                                            />
+                                        </div>
+                                        <div className="md:col-span-2">
+                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Deskripsi Singkat</label>
+                                            <textarea
+                                                rows="3"
+                                                value={item.desc}
+                                                onChange={(e) => handleAgendaChange(i, 'desc', e.target.value)}
+                                                className="w-full p-2 border rounded text-sm"
+                                                placeholder="Deskripsi singkat kegiatan..."
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+
+                            <button
+                                onClick={addAgenda}
+                                className="w-full py-4 border-2 border-dashed border-blue-300 text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition flex items-center justify-center gap-2"
+                            >
+                                <LayoutDashboard size={20} /> Tambah Agenda Baru
                             </button>
                         </div>
                     </div>

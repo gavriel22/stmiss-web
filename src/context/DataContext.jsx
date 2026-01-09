@@ -86,12 +86,22 @@ export const DataProvider = ({ children }) => {
         author: "Bagian Admisi"
       }
     ],
-    agenda: {
-      title: "Seminar Internasional Teologi Misioner",
-      date: "15 Januari 2026",
-      location: "Aula Utama STMiss",
-      desc: "Ikuti berbagai kegiatan akademik, seminar, dan persekutuan doa yang diselenggarakan oleh ST Missiologia Yogyakarta."
-    },
+    agenda: [
+      {
+        id: 1,
+        title: "Seminar Internasional Teologi Misioner",
+        date: "15 Januari 2026",
+        location: "Aula Utama STMiss",
+        desc: "Ikuti berbagai kegiatan akademik, seminar, dan persekutuan doa yang diselenggarakan oleh ST Missiologia Yogyakarta."
+      },
+      {
+        id: 2,
+        title: "Ibadah Awal Semester Genap",
+        date: "02 Februari 2026",
+        location: "Chapel Kampus",
+        desc: "Mengawali semester baru dengan persekutuan doa bersama seluruh civitas akademika."
+      }
+    ],
     location: {
       address: "Jl. Solo Km. 10.5, Kalasan, Yogyakarta, Indonesia",
       phone: "(0274) 555-1234",
@@ -172,8 +182,16 @@ export const DataProvider = ({ children }) => {
     });
   };
 
+  const updateAgenda = (agendaList) => {
+    setSiteData(prev => {
+      const newData = { ...prev, agenda: agendaList };
+      localStorage.setItem('siteData_v2', JSON.stringify(newData));
+      return newData;
+    });
+  };
+
   return (
-    <DataContext.Provider value={{ siteData, updateHero, aboutData, updateAbout, updateLecturers, updatePrograms, updateHomeSections, updateNews }}>
+    <DataContext.Provider value={{ siteData, updateHero, aboutData, updateAbout, updateLecturers, updatePrograms, updateHomeSections, updateNews, updateAgenda }}>
       {children}
     </DataContext.Provider>
   );
