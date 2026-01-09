@@ -8,7 +8,7 @@ const DataContext = createContext();
 // Default data to seed if Firestore is empty
 const DEFAULT_SITE_DATA = {
   heroTitle: "Menjadi Terang Bagi Bangsa",
-  heroDesc: "Bergabunglah dengan Sekolah Teologi Missiologia Yogyakarta untuk pendidikan teologi yang holistik.",
+  heroDesc: "Bergabunglah dengan Sekolah Tinggi Missiologia Yogyakarta untuk pendidikan teologi yang holistik.",
   heroImages: [
     "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
   ],
@@ -28,9 +28,9 @@ const DEFAULT_SITE_DATA = {
     { id: 3, title: "Lokasi Strategis", desc: "Kampus yang kondusif di pusat budaya Yogyakarta.", link: "/admission" }
   ],
   news: [
-    { id: 1, date: '20 Des 2025', title: 'Wisuda Sarjana Teologi Angkatan ke-X', excerpt: 'ST Missiologia kembali meluluskan 50 wisudawan terbaik yang siap melayani di berbagai ladang misi.', content: "Yogyakarta, 20 Desember 2025 – Sekolah Teologi Missiologia kembali menggelar Rapat Senat Terbuka dalam rangka Wisuda Sarjana Teologi Angkatan ke-X.", image: "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80", author: "Humas STMiss" },
+    { id: 1, date: '20 Des 2025', title: 'Wisuda Sarjana Teologi Angkatan ke-X', excerpt: 'ST Missiologia kembali meluluskan 50 wisudawan terbaik yang siap melayani di berbagai ladang misi.', content: "Yogyakarta, 20 Desember 2025 – Sekolah Tinggi Missiologia kembali menggelar Rapat Senat Terbuka dalam rangka Wisuda Sarjana Teologi Angkatan ke-X.", image: "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80", author: "Humas STMiss" },
     { id: 2, date: '15 Des 2025', title: 'Seminar Nasional: Misi di Era Digital', excerpt: 'Menghadirkan pembicara ahli untuk mengupas strategi penginjilan efektif melalui media sosial dan teknologi.', content: "Yogyakarta – Transformasi digital telah menyentuh berbagai aspek kehidupan, termasuk cara bergereja dan bermisi.", image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80", author: "Panitia Seminar" },
-    { id: 3, date: '10 Des 2025', title: 'Penerimaan Mahasiswa Baru Gelombang 1 Dibuka', excerpt: 'Segera daftarkan diri Anda untuk Tahun Akademik 2026/2027. Beasiswa tersedia bagi yang membutuhkan.', content: "Sekolah Teologi Missiologia secara resmi membuka Penerimaan Mahasiswa Baru (PMB) untuk Tahun Akademik 2026/2027.", image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80", author: "Bagian Admisi" }
+    { id: 3, date: '10 Des 2025', title: 'Penerimaan Mahasiswa Baru Gelombang 1 Dibuka', excerpt: 'Segera daftarkan diri Anda untuk Tahun Akademik 2026/2027. Beasiswa tersedia bagi yang membutuhkan.', content: "Sekolah Tinggi Missiologia secara resmi membuka Penerimaan Mahasiswa Baru (PMB) untuk Tahun Akademik 2026/2027.", image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80", author: "Bagian Admisi" }
   ],
   agenda: [
     { id: 1, title: "Seminar Internasional Teologi Misioner", date: "15 Januari 2026", location: "Aula Utama STMiss", desc: "Ikuti berbagai kegiatan akademik, seminar, dan persekutuan doa yang diselenggarakan oleh ST Missiologia Yogyakarta." },
@@ -47,11 +47,11 @@ const DEFAULT_SITE_DATA = {
 const DEFAULT_ABOUT_DATA = {
   hero: {
     title: "Tentang Kami",
-    desc: "Mengenal lebih dekat Sekolah Teologi Missiologia, sejarah, visi, dan orang-orang di baliknya.",
+    desc: "Mengenal lebih dekat Sekolah Tinggi Missiologia, sejarah, visi, dan orang-orang di baliknya.",
     image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
   },
   history: {
-    desc1: "Sekolah Teologi Missiologia didirikan pada tahun 1995 oleh sekelompok hamba Tuhan yang memiliki beban untuk melengkapi gereja-gereja di Indonesia dengan pemimpin yang tidak hanya cakap secara teologis, tetapi juga memiliki hati untuk misi.",
+    desc1: "Sekolah Tinggi Missiologia didirikan pada tahun 1995 oleh sekelompok hamba Tuhan yang memiliki beban untuk melengkapi gereja-gereja di Indonesia dengan pemimpin yang tidak hanya cakap secara teologis, tetapi juga memiliki hati untuk misi.",
     desc2: "Berawal dari sebuah ruko kecil di Yogyakarta, ST Missiologia kini telah berkembang menjadi institusi pendidikan tinggi teologi yang diakui, meluluskan ribuan alumni yang melayani di berbagai pelosok nusantara dan mancanegara.",
     image: "https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
   },

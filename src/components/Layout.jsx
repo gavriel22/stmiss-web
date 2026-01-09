@@ -83,7 +83,7 @@ export const Footer = () => (
       </div>
     </div>
     <div className="text-center mt-10 border-t border-gray-800 pt-6 text-xs">
-      © 2026 Sekolah Teologi Missiologia. Referensi Layout: UKSW.
+      © 2026 Sekolah Tinggi Missiologia.
     </div>
   </footer>
 );
