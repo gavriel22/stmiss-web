@@ -33,6 +33,17 @@ export const DEFAULT_SITE_DATA = {
         phone: "(0274) 555-1234",
         email: "info@stmiss.ac.id",
         mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15812.55394145695!2d110.456637!3d-7.775871!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a5a1e2b5b5b5b%3A0x5b5b5b5b5b5b5b5b!2sYogyakarta!5e0!3m2!1sen!2sid!4v1625000000000!5m2!1sen!2sid"
+    },
+    academicCalendar: {
+        yearLabel: "Semester Ganjil 2026/2027",
+        events: [
+            { id: 1, date: "1-15 Agustus 2026", event: "Registrasi Ulang Mahasiswa Lama", type: "Administrasi" },
+            { id: 2, date: "17 Agustus 2026", event: "Upacara Kemerdekaan RI", type: "Nasional" },
+            { id: 3, date: "20-22 Agustus 2026", event: "Orientasi Mahasiswa Baru (OSPEK)", type: "Kemahasiswaan" },
+            { id: 4, date: "25 Agustus 2026", event: "Kuliah Perdana Semester Ganjil 2026/2027", type: "Akademik" },
+            { id: 5, date: "10-14 Oktober 2026", event: "Ujian Tengah Semester (UTS)", type: "Ujian" },
+            { id: 6, date: "15 Desember 2026", event: "Natal Kampus & Libur Akhir Tahun", type: "Perayaan" }
+        ]
     }
 };
 

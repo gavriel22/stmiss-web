@@ -22,7 +22,7 @@ const THEME_COLORS = {
 const Admin = () => {
     // --- ALL HOOKS MUST BE AT THE TOP (before any conditional returns) ---
     const navigate = useNavigate();
-    const { siteData, updateHomeSections, aboutData, updateAbout, updateLecturers, updatePrograms, updateNews, updateAgenda } = useData();
+    const { siteData, updateHomeSections, aboutData, updateAbout, updateLecturers, updatePrograms, updateNews, updateAgenda, updateAcademicCalendar } = useData();
 
     // Auth state
     const [user, setUser] = useState(null);
@@ -37,6 +37,7 @@ const Admin = () => {
     const [adminNews, setAdminNews] = useState(siteData?.news || []);
     const [adminAgendaList, setAdminAgendaList] = useState(Array.isArray(siteData?.agenda) ? siteData.agenda : (siteData?.agenda ? [siteData.agenda] : []));
     const [adminLocation, setAdminLocation] = useState(siteData?.location || {});
+    const [adminCalendar, setAdminCalendar] = useState(siteData?.academicCalendar || { yearLabel: "", events: [] });
 
     // --- State About ---
     const [aboutHero, setAboutHero] = useState(aboutData?.hero || {});
@@ -76,6 +77,7 @@ const Admin = () => {
             setAdminLocation(siteData.location || {});
             setAdminLecturers(siteData.lecturers || []);
             setAdminPrograms(siteData.programs || []);
+            setAdminCalendar(siteData.academicCalendar || { yearLabel: "", events: [] });
         }
     }, [siteData]);
 
@@ -261,6 +263,28 @@ const Admin = () => {
         }
     };
 
+    // Helpers for Calendar
+    const handleCalendarEventChange = (index, field, value) => {
+        const newEvents = [...adminCalendar.events];
+        newEvents[index] = { ...newEvents[index], [field]: value };
+        setAdminCalendar({ ...adminCalendar, events: newEvents });
+    };
+
+    const addCalendarEvent = () => {
+        const newEvents = [...(adminCalendar.events || []), { id: Date.now(), date: "", event: "Kegiatan Baru", type: "Umum" }];
+        setAdminCalendar({ ...adminCalendar, events: newEvents });
+    };
+
+    const removeCalendarEvent = (index) => {
+        const newEvents = adminCalendar.events.filter((_, i) => i !== index);
+        setAdminCalendar({ ...adminCalendar, events: newEvents });
+    };
+
+    const handleSaveCalendar = async () => {
+        await updateAcademicCalendar(adminCalendar);
+        alert("Kalender Akademik berhasil disimpan!");
+    };
+
 
     return (
         <div className="flex h-screen bg-gray-100 font-sans">
@@ -315,6 +339,12 @@ const Admin = () => {
                         className={`w-full text-left px-4 py-3 rounded transition-colors ${activeTab === 'leaders' ? 'bg-blue-800 text-white font-bold' : 'text-blue-200 hover:bg-blue-800/50'}`}
                     >
                         Kelola Pengurus
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('calendar')}
+                        className={`w-full text-left px-4 py-3 rounded transition-colors ${activeTab === 'calendar' ? 'bg-blue-800 text-white font-bold' : 'text-blue-200 hover:bg-blue-800/50'}`}
+                    >
+                        Kelola Kalender
                     </button>
                 </nav>
 
@@ -858,11 +888,17 @@ const Admin = () => {
                                         <div className="flex flex-col items-center text-center space-y-4">
                                             <div className="relative group-avatar w-24 h-24">
                                                 <img src={leader.img} className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md mx-auto" />
-                                                <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-avatar-hover:opacity-100 flex items-center justify-center transition cursor-pointer">
-                                                    <label className="text-white text-xs font-bold cursor-pointer w-full h-full flex items-center justify-center rounded-full">
+                                                <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-avatar-hover:opacity-100 flex flex-col items-center justify-center transition cursor-pointer gap-1">
+                                                    <label className="text-white text-xs font-bold cursor-pointer hover:underline">
                                                         Ubah
                                                         <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e.target.files[0], (res) => handleLeaderChange(i, 'img', res))} className="hidden" />
                                                     </label>
+                                                    <button
+                                                        onClick={() => handleLeaderChange(i, 'img', 'https://via.placeholder.com/150')}
+                                                        className="text-red-300 hover:text-red-100 text-[10px] font-bold"
+                                                    >
+                                                        Hapus Foto
+                                                    </button>
                                                 </div>
                                             </div>
 
@@ -886,6 +922,81 @@ const Admin = () => {
                         </div>
                     </div>
                 )}
+
+                {activeTab === 'calendar' && (
+                    <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                        <div className="flex justify-between items-center border-b pb-6 mb-6">
+                            <h3 className="text-2xl font-bold text-gray-800">Kelola Kalender Akademik</h3>
+                            <button onClick={handleSaveCalendar} className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center gap-2 font-bold">
+                                <Save size={18} /> Simpan Perubahan
+                            </button>
+                        </div>
+
+                        <div className="space-y-6">
+                            <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                <label className="block text-sm font-bold text-blue-900 mb-2">Label Tahun Akademik / Semester</label>
+                                <input
+                                    type="text"
+                                    value={adminCalendar.yearLabel}
+                                    onChange={(e) => setAdminCalendar({ ...adminCalendar, yearLabel: e.target.value })}
+                                    className="w-full p-2 border rounded font-bold text-lg text-blue-900"
+                                    placeholder="Contoh: Semester Ganjil 2026/2027"
+                                />
+                                <p className="text-xs text-blue-600 mt-2">
+                                    *Catatan: Sistem menampilkan kalender untuk periode ini. Ganti label ini saat berganti tahun ajaran baru.
+                                </p>
+                            </div>
+
+                            <div className="space-y-4">
+                                <h4 className="font-bold text-gray-700">Daftar Kegiatan</h4>
+                                {adminCalendar.events && adminCalendar.events.map((evt, i) => (
+                                    <div key={i} className="flex gap-4 p-4 border rounded bg-gray-50 items-start">
+                                        <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal</label>
+                                                <input
+                                                    type="text"
+                                                    value={evt.date}
+                                                    onChange={(e) => handleCalendarEventChange(i, 'date', e.target.value)}
+                                                    className="w-full p-2 border rounded"
+                                                    placeholder="17 Agustus 2026"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Kegiatan</label>
+                                                <input
+                                                    type="text"
+                                                    value={evt.event}
+                                                    onChange={(e) => handleCalendarEventChange(i, 'event', e.target.value)}
+                                                    className="w-full p-2 border rounded font-bold"
+                                                    placeholder="Nama Kegiatan..."
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Kategori</label>
+                                                <input
+                                                    type="text"
+                                                    value={evt.type}
+                                                    onChange={(e) => handleCalendarEventChange(i, 'type', e.target.value)}
+                                                    className="w-full p-2 border rounded text-sm"
+                                                    placeholder="Akademik/Libur/..."
+                                                />
+                                            </div>
+                                        </div>
+                                        <button onClick={() => removeCalendarEvent(i)} className="p-2 text-red-500 hover:bg-red-50 rounded">
+                                            <LogOut size={20} className="rotate-180" />
+                                        </button>
+                                    </div>
+                                ))}
+
+                                <button onClick={addCalendarEvent} className="w-full py-3 border-2 border-dashed border-blue-300 text-blue-600 font-bold rounded-lg hover:bg-blue-50 transition">
+                                    + Tambah Kegiatan Baru
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
             </div >
         </div >
     );

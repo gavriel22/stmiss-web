@@ -150,6 +150,17 @@ export const DataProvider = ({ children }) => {
     }
   };
 
+  const updateAcademicCalendar = async (calendarData) => {
+    try {
+      const newData = { ...siteData, academicCalendar: calendarData };
+      await setDoc(siteDocRef, newData);
+      console.log("Academic Calendar save successful!");
+    } catch (error) {
+      console.error("Error saving academic calendar:", error);
+      alert("Gagal menyimpan: " + error.message);
+    }
+  };
+
   // Loading state before data is fetched
   if (loading) {
     return (
@@ -163,7 +174,7 @@ export const DataProvider = ({ children }) => {
   }
 
   return (
-    <DataContext.Provider value={{ siteData, updateHero, aboutData, updateAbout, updateLecturers, updatePrograms, updateHomeSections, updateNews, updateAgenda }}>
+    <DataContext.Provider value={{ siteData, updateHero, aboutData, updateAbout, updateLecturers, updatePrograms, updateHomeSections, updateNews, updateAgenda, updateAcademicCalendar }}>
       {children}
     </DataContext.Provider>
   );

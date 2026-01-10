@@ -2,6 +2,9 @@
 import React from 'react';
 import { Header, Footer } from '../components/Layout';
 import { BookOpen, GraduationCap, Calendar, FileText, CheckCircle } from 'lucide-react';
+import { useData } from '../context/DataContext';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const AcademicHero = () => (
     <section className="relative h-[300px] md:h-[400px] flex items-center mt-[105px] bg-blue-900 overflow-hidden">
@@ -89,14 +92,41 @@ const ProgramsDetail = () => {
 };
 
 const AcademicCalendar = () => {
-    const events = [
-        { date: "1-15 Agustus 2026", event: "Registrasi Ulang Mahasiswa Lama", type: "Administrasi" },
-        { date: "17 Agustus 2026", event: "Upacara Kemerdekaan RI", type: "Nasional" },
-        { date: "20-22 Agustus 2026", event: "Orientasi Mahasiswa Baru (OSPEK)", type: "Kemahasiswaan" },
-        { date: "25 Agustus 2026", event: "Kuliah Perdana Semester Ganjil 2026/2027", type: "Akademik" },
-        { date: "10-14 Oktober 2026", event: "Ujian Tengah Semester (UTS)", type: "Ujian" },
-        { date: "15 Desember 2026", event: "Natal Kampus & Libur Akhir Tahun", type: "Perayaan" },
-    ];
+    const { siteData } = useData();
+    const calendarData = siteData?.academicCalendar || { yearLabel: "Semester Ganjil 2026/2027", events: [] };
+    const events = calendarData.events || [];
+
+    const handleDownloadPDF = async () => {
+        try {
+            const input = document.getElementById('calendar-table');
+            if (!input) {
+                alert("Element kalender tidak ditemukan!");
+                return;
+            }
+
+            const canvas = await html2canvas(input, { scale: 2 });
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgProps = pdf.getImageProperties(imgData);
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+            // Add Header
+            pdf.setFontSize(18);
+            pdf.setTextColor(30, 58, 138); // blue-900
+            pdf.text("Kalender Akademik ST Missiologia", 105, 20, null, null, "center");
+
+            pdf.setFontSize(14);
+            pdf.setTextColor(100);
+            pdf.text(calendarData.yearLabel || "", 105, 30, null, null, "center");
+
+            pdf.addImage(imgData, 'PNG', 0, 40, pdfWidth, pdfHeight);
+            pdf.save(`Kalender_Akademik_${calendarData.yearLabel.replace(/[\/\s]/g, '_')}.pdf`);
+        } catch (error) {
+            console.error("Gagal download PDF:", error);
+            alert("Maaf, terjadi kesalahan saat mendownload PDF. Silakan coba lagi.");
+        }
+    };
 
     return (
         <section className="py-20 bg-gray-50">
@@ -104,8 +134,9 @@ const AcademicCalendar = () => {
                 <div className="flex flex-col md:flex-row gap-12">
                     <div className="md:w-1/3">
                         <h2 className="text-3xl font-bold text-blue-900 mb-6">Kalender Akademik</h2>
+                        <h3 className="text-xl font-bold text-gray-700 mb-4">{calendarData.yearLabel}</h3>
                         <p className="text-gray-600 mb-6">
-                            Jadwal penting kegiatan akademik semester Ganjil T.A. 2026/2027. Pastikan Anda mencatat tanggal-tanggal penting ini.
+                            Jadwal penting kegiatan akademik. Pastikan Anda mencatat tanggal-tanggal penting ini.
                         </p>
                         <div className="bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded-r-lg">
                             <h4 className="font-bold text-yellow-800 mb-2">Catatan Penting:</h4>
@@ -115,7 +146,7 @@ const AcademicCalendar = () => {
                         </div>
                     </div>
                     <div className="md:w-2/3">
-                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div id="calendar-table" className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left border-collapse">
                                     <thead>
@@ -147,7 +178,7 @@ const AcademicCalendar = () => {
                             </div>
                         </div>
                         <div className="mt-6 text-right">
-                            <button className="text-blue-900 font-bold hover:text-yellow-600 flex items-center gap-2 ml-auto">
+                            <button onClick={handleDownloadPDF} className="text-blue-900 font-bold hover:text-yellow-600 flex items-center gap-2 ml-auto cursor-pointer">
                                 <FileText size={18} /> Download Kalender Lengkap (PDF)
                             </button>
                         </div>
