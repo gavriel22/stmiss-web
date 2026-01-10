@@ -41,7 +41,7 @@ const Hero = ({ title, desc, images }) => {
 
             <div className="relative z-20 text-left text-white container mx-auto px-4">
                 <span className="inline-block bg-yellow-500 text-blue-950 px-3 py-1 text-xs font-bold rounded mb-4 tracking-wider">
-                    SEKOLAH TEOLOGI MISIONER
+                    SEKOLAH TINGGI MISSIOLOGIA YOGYAKARTA
                 </span>
                 <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-5 leading-tight max-w-3xl">
                     {title}
@@ -195,18 +195,18 @@ const NewsEventsSection = ({ news, agenda }) => {
                     <h2 className="text-3xl font-bold text-blue-900 mb-8">Berita Terbaru</h2>
                     <div className="space-y-6">
                         {news.slice(0, 3).map(item => (
-                            <div key={item.id} className="flex gap-4 items-start border-b border-gray-100 pb-6 last:border-b-0">
-                                <div className="bg-blue-50 text-blue-900 p-3 rounded-lg text-center min-w-[70px]">
+                            <Link key={item.id} to={`/berita/${item.id}`} className="flex gap-4 items-start border-b border-gray-100 pb-6 last:border-b-0 group hover:bg-gray-50 transition duration-300 p-3 rounded-xl -mx-3">
+                                <div className="bg-blue-50 text-blue-900 p-3 rounded-lg text-center min-w-[70px] group-hover:bg-white group-hover:shadow-sm transition">
                                     <CalendarDays size={24} className="mx-auto mb-1" />
                                     <span className="text-xs font-bold">{item.date}</span>
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-lg text-gray-800 hover:text-blue-900 cursor-pointer transition mb-1">
+                                    <h4 className="font-bold text-lg text-gray-800 group-hover:text-blue-900 transition mb-1">
                                         {item.title}
                                     </h4>
-                                    <p className="text-sm text-gray-600">{item.excerpt}</p>
+                                    <p className="text-sm text-gray-600 line-clamp-2">{item.excerpt}</p>
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                     <Link to="/berita" className="mt-8 text-blue-900 font-bold flex items-center gap-2 hover:text-yellow-600 inline-flex">
@@ -215,9 +215,9 @@ const NewsEventsSection = ({ news, agenda }) => {
                 </div>
 
                 {/* Kolom Agenda */}
-                <div className="bg-blue-900 p-10 rounded-3xl text-white flex flex-col justify-between relative overflow-hidden group">
-                    <Link to="/agenda" className="absolute inset-0 z-10 block" aria-label="Lihat Semua Agenda"></Link>
-
+                <Link to="/agenda" className="bg-blue-900 p-10 rounded-3xl text-white flex flex-col justify-between relative overflow-hidden group hover:shadow-xl transition duration-300 block">
+                    {/* Background Pattern or Image can go here */}
+                    
                     {featuredAgenda ? (
                         <>
                             <div>
@@ -228,7 +228,7 @@ const NewsEventsSection = ({ news, agenda }) => {
                                     {featuredAgenda.desc}
                                 </p>
                             </div>
-                            <div className="border-l-4 border-yellow-500 pl-6 relative z-20 pointer-events-none">
+                            <div className="border-l-4 border-yellow-500 pl-6 relative z-20">
                                 <span className="text-sm text-yellow-400 font-bold uppercase tracking-wider">Kegiatan Terdekat</span>
                                 <h4 className="text-2xl font-bold text-white mt-1">{featuredAgenda.title}</h4>
                                 <p className="text-blue-100 mt-2 text-sm flex items-center gap-2">
@@ -242,7 +242,7 @@ const NewsEventsSection = ({ news, agenda }) => {
                             <p>Belum ada agenda terdekat.</p>
                         </div>
                     )}
-                </div>
+                </Link>
             </div>
         </section>
     );

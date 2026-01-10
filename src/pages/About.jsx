@@ -100,7 +100,7 @@ const LeadershipSection = ({ leaders }) => {
         <section className="py-20 bg-white">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl font-bold text-blue-900 mb-4">Pimpinan Sekolah</h2>
+                    <h2 className="text-3xl font-bold text-blue-900 mb-4">Susunan Pengurus Sekolah Tinggi Missiologia Yogyakarta</h2>
                     <div className="w-16 h-1 bg-yellow-500 mx-auto"></div>
                 </div>
 

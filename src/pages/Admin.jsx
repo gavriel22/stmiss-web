@@ -310,6 +310,12 @@ const Admin = () => {
                     >
                         Kelola Agenda
                     </button>
+                    <button
+                        onClick={() => setActiveTab('leaders')}
+                        className={`w-full text-left px-4 py-3 rounded transition-colors ${activeTab === 'leaders' ? 'bg-blue-800 text-white font-bold' : 'text-blue-200 hover:bg-blue-800/50'}`}
+                    >
+                        Kelola Pengurus
+                    </button>
                 </nav>
 
                 <div className="p-6 border-t border-blue-800 space-y-3">
@@ -391,6 +397,13 @@ const Admin = () => {
                         <section className="space-y-4 pt-6 border-t">
                             <div className="bg-blue-50 border border-blue-200 p-4 rounded text-blue-800 text-sm">
                                 <strong>Info:</strong> Pengaturan Agenda telah dipindahkan ke menu <strong>Kelola Agenda</strong> di sidebar.
+                            </div>
+                        </section>
+
+                        {/* Info for Moved Leaders Section */}
+                        <section className="space-y-4 pt-6 border-t">
+                            <div className="bg-blue-50 border border-blue-200 p-4 rounded text-blue-800 text-sm">
+                                <strong>Info:</strong> Pengaturan Susunan Pengurus telah dipindahkan ke menu <strong>Kelola Pengurus</strong> di sidebar.
                             </div>
                         </section>
 
@@ -486,349 +499,395 @@ const Admin = () => {
                         </section>
 
                         {/* 4. Leadership */}
-                        <section className="space-y-4 pt-4 border-t">
-                            <h4 className="text-lg font-bold text-blue-900 bg-blue-50 p-2 rounded">4. Pimpinan</h4>
-                            <div className="grid grid-cols-2 gap-4">
+
+                        <section className="space-y-4 pt-6 border-t">
+                            <div className="bg-blue-50 border border-blue-200 p-4 rounded text-blue-800 text-sm">
+                                <strong>Info:</strong> Pengaturan Susunan Pengurus telah dipindahkan ke menu <strong>Kelola Pengurus</strong> di sidebar.
+                                Data pengurus ditampilkan di halaman Tentang Kami.
+                            </div>
+                        </section>
+
+                    </div>
+                )
+                }
+
+                {
+                    activeTab === 'lecturers' && (
+                        <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                            <h3 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-4">Edit Data Dosen</h3>
+                            <div className="space-y-6">
+                                {adminLecturers.map((lecturer, i) => (
+                                    <div key={i} className="flex gap-6 p-4 border rounded-lg bg-gray-50 items-start">
+                                        <div className="w-24 h-24 shrink-0 bg-gray-200 rounded overflow-hidden relative group">
+                                            <img src={lecturer.img} className="w-full h-full object-cover" />
+                                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition gap-2">
+                                                <label className="cursor-pointer text-white text-xs text-center border border-white px-2 py-1 rounded hover:bg-white hover:text-black transition">
+                                                    Ganti
+                                                    <input type="file" className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e.target.files[0], (res) => handleAdminLecturerChange(i, 'img', res))} />
+                                                </label>
+                                                <button
+                                                    onClick={() => handleAdminLecturerChange(i, 'img', 'https://via.placeholder.com/300')}
+                                                    className="text-red-400 text-xs font-bold hover:text-red-200"
+                                                >
+                                                    Hapus Foto
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div className="flex-1 space-y-3">
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 uppercase">Nama Lengkap & Gelar</label>
+                                                <input type="text" value={lecturer.name} onChange={(e) => handleAdminLecturerChange(i, 'name', e.target.value)} className="w-full p-2 border rounded font-bold text-gray-800" placeholder="Contoh: Dr. Budi Santoso" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 uppercase">Mata Kuliah / Jabatan</label>
+                                                <input type="text" value={lecturer.role} onChange={(e) => handleAdminLecturerChange(i, 'role', e.target.value)} className="w-full p-2 border rounded text-blue-600" placeholder="Contoh: Dosen Dogmatika" />
+                                            </div>
+                                        </div>
+                                        <button onClick={() => removeAdminLecturer(i)} className="text-red-500 hover:text-red-700 p-2">
+                                            Hapus
+                                        </button>
+                                    </div>
+                                ))}
+
+                                <button onClick={addAdminLecturer} className="w-full py-3 border-2 border-dashed border-blue-300 text-blue-600 font-bold rounded-lg hover:bg-blue-50 transition">
+                                    + Tambah Dosen Baru
+                                </button>
+
+                                <div className="pt-4 border-t flex justify-end">
+                                    <button onClick={handleSaveLecturers} className="bg-green-600 text-white px-8 py-3 rounded hover:bg-green-700 flex items-center gap-2 font-bold shadow-lg">
+                                        <Save size={20} /> Simpan Perubahan Dosen
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+
+                {
+                    activeTab === 'programs' && (
+                        <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                            <div className="flex justify-between items-center border-b pb-6 mb-6">
+                                <h3 className="text-2xl font-bold text-gray-800">Edit Program Studi</h3>
+                                <button onClick={handleSavePrograms} className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center gap-2 font-bold"><Save size={18} /> Simpan Perubahan</button>
+                            </div>
+
+                            <div className="space-y-8">
+                                {adminPrograms.map((prog, i) => (
+                                    <div key={i} className="border rounded-xl p-6 bg-gray-50 relative group">
+                                        <button onClick={() => removeProgram(i)} className="absolute top-4 right-4 text-red-400 hover:text-red-600 font-bold">Hapus Program</button>
+
+                                        <div className="grid md:grid-cols-2 gap-6 mb-6">
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Jenjang</label>
+                                                <input type="text" value={prog.level} onChange={(e) => handleProgramChange(i, 'level', e.target.value)} className="w-full p-2 border rounded font-bold" placeholder="Contoh: Sarjana (S1)" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Program</label>
+                                                <input type="text" value={prog.title} onChange={(e) => handleProgramChange(i, 'title', e.target.value)} className="w-full p-2 border rounded font-bold text-blue-900" placeholder="Contoh: Sarjana Teologi" />
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Deskripsi</label>
+                                                <textarea rows="2" value={prog.desc} onChange={(e) => handleProgramChange(i, 'desc', e.target.value)} className="w-full p-2 border rounded" />
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Warna Tema</label>
+                                                <div className="flex flex-wrap gap-3">
+                                                    {Object.entries(THEME_COLORS).map(([name, theme]) => (
+                                                        <button
+                                                            key={name}
+                                                            type="button"
+                                                            onClick={() => handleProgramChange(i, 'color', theme.value)}
+                                                            className={`w-8 h-8 rounded-full ${theme.hex} border-2 transition-transform hover:scale-110 ${prog.color === theme.value ? 'border-black scale-110 shadow-lg ring-2 ring-offset-2 ring-blue-500' : 'border-transparent'}`}
+                                                            title={name}
+                                                        />
+                                                    ))}
+                                                </div>
+                                                <p className="text-xs text-gray-400 mt-2">
+                                                    Terpilih: {Object.keys(THEME_COLORS).find(key => THEME_COLORS[key].value === prog.color) || "Custom"}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-white p-4 rounded border">
+                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Fitur Unggulan</label>
+                                            <div className="space-y-2">
+                                                {prog.features && prog.features.map((feat, fIdx) => (
+                                                    <div key={fIdx} className="flex gap-2">
+                                                        <input type="text" value={feat} onChange={(e) => handleFeatureChange(i, fIdx, e.target.value)} className="flex-1 p-2 border rounded text-sm" placeholder="Fitur..." />
+                                                        <button onClick={() => removeFeature(i, fIdx)} className="text-red-400 hover:text-red-600 font-bold px-2">X</button>
+                                                    </div>
+                                                ))}
+                                                <button onClick={() => addFeature(i)} className="text-sm text-blue-600 font-bold hover:underline">+ Tambah Fitur</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+
+                                <button onClick={addProgram} className="w-full py-3 border-2 border-dashed border-blue-300 text-blue-600 font-bold rounded-lg hover:bg-blue-50 transition">
+                                    + Tambah Program Baru
+                                </button>
+                            </div>
+                        </div>
+                    )
+                }
+                {
+                    activeTab === 'news' && (
+                        <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                            <div className="flex justify-between items-center border-b pb-6 mb-6">
+                                <h3 className="text-2xl font-bold text-gray-800">Kelola Berita & Artikel</h3>
+                                <button
+                                    onClick={() => {
+                                        updateNews(adminNews);
+                                        alert("Berita berhasil disimpan!");
+                                    }}
+                                    className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center gap-2 font-bold"
+                                >
+                                    <Save size={18} /> Simpan Perubahan
+                                </button>
+                            </div>
+
+                            <div className="space-y-6">
+                                {adminNews.map((item, i) => (
+                                    <div key={i} className="border rounded-xl p-6 bg-gray-50 relative group">
+                                        <button
+                                            onClick={() => {
+                                                if (window.confirm("Hapus berita ini?")) {
+                                                    setAdminNews(adminNews.filter((_, idx) => idx !== i));
+                                                }
+                                            }}
+                                            className="absolute top-4 right-4 text-red-400 hover:text-red-600 font-bold bg-white px-3 py-1 rounded shadow-sm border border-red-100"
+                                        >
+                                            Hapus
+                                        </button>
+
+                                        <div className="grid md:grid-cols-3 gap-6">
+                                            {/* Image Section */}
+                                            <div className="md:col-span-1">
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Gambar Sampul</label>
+                                                <div className="aspect-video bg-gray-200 rounded overflow-hidden relative group-image">
+                                                    <img src={item.image || "https://via.placeholder.com/300x200"} className="w-full h-full object-cover" />
+                                                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
+                                                        <label className="cursor-pointer bg-white text-gray-900 text-xs px-3 py-1 rounded font-bold hover:bg-gray-100">
+                                                            Ubah Foto
+                                                            <input
+                                                                type="file"
+                                                                className="hidden"
+                                                                accept="image/*"
+                                                                onChange={(e) => handleImageUpload(e.target.files[0], (res) => handleNewsChange(i, 'image', res))}
+                                                            />
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Content Section */}
+                                            <div className="md:col-span-2 space-y-4">
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal</label>
+                                                        <input
+                                                            type="text"
+                                                            value={item.date}
+                                                            onChange={(e) => handleNewsChange(i, 'date', e.target.value)}
+                                                            className="w-full p-2 border rounded text-sm"
+                                                            placeholder="20 Des 2025"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Penulis</label>
+                                                        <input
+                                                            type="text"
+                                                            value={item.author || ""}
+                                                            onChange={(e) => handleNewsChange(i, 'author', e.target.value)}
+                                                            className="w-full p-2 border rounded text-sm"
+                                                            placeholder="Humas"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Judul Berita</label>
+                                                    <input
+                                                        type="text"
+                                                        value={item.title}
+                                                        onChange={(e) => handleNewsChange(i, 'title', e.target.value)}
+                                                        className="w-full p-2 border rounded font-bold text-blue-900"
+                                                        placeholder="Judul Berita..."
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Ringkasan (Daftar Depan)</label>
+                                                    <textarea
+                                                        rows="2"
+                                                        value={item.excerpt}
+                                                        onChange={(e) => handleNewsChange(i, 'excerpt', e.target.value)}
+                                                        className="w-full p-2 border rounded text-sm"
+                                                        placeholder="Ringkasan singkat untuk tampilan kartu..."
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Isi Berita Lengkap</label>
+                                                    <textarea
+                                                        rows="6"
+                                                        value={item.content || ""}
+                                                        onChange={(e) => handleNewsChange(i, 'content', e.target.value)}
+                                                        className="w-full p-2 border rounded text-sm font-mono bg-white"
+                                                        placeholder="Isi berita lengkap..."
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+
+                                <button
+                                    onClick={() => setAdminNews([{ id: Date.now(), date: "", title: "Berita Baru", excerpt: "", content: "", image: "", author: "" }, ...adminNews])}
+                                    className="w-full py-4 border-2 border-dashed border-blue-300 text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition flex items-center justify-center gap-2"
+                                >
+                                    <LayoutDashboard size={20} /> Tambah Berita Baru
+                                </button>
+                            </div>
+                        </div>
+                    )
+                }
+                {
+                    activeTab === 'agenda' && (
+                        <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                            <div className="flex justify-between items-center border-b pb-6 mb-6">
+                                <h3 className="text-2xl font-bold text-gray-800">Kelola Agenda Kampus</h3>
+                                <button
+                                    onClick={() => {
+                                        updateAgenda(adminAgendaList);
+                                        alert("Agenda berhasil disimpan!");
+                                    }}
+                                    className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center gap-2 font-bold"
+                                >
+                                    <Save size={18} /> Simpan Perubahan
+                                </button>
+                            </div>
+
+                            <div className="space-y-6">
+                                {adminAgendaList.map((item, i) => (
+                                    <div key={i} className="border rounded-xl p-6 bg-gray-50 relative group">
+                                        <button
+                                            onClick={() => {
+                                                if (window.confirm("Hapus agenda ini?")) {
+                                                    setAdminAgendaList(adminAgendaList.filter((_, idx) => idx !== i));
+                                                }
+                                            }}
+                                            className="absolute top-4 right-4 text-red-400 hover:text-red-600 font-bold bg-white px-3 py-1 rounded shadow-sm border border-red-100"
+                                        >
+                                            Hapus
+                                        </button>
+
+                                        <div className="grid md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Agenda / Kegiatan</label>
+                                                <input
+                                                    type="text"
+                                                    value={item.title}
+                                                    onChange={(e) => handleAgendaChange(i, 'title', e.target.value)}
+                                                    className="w-full p-2 border rounded font-bold text-blue-900"
+                                                    placeholder="Judul Agenda..."
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal</label>
+                                                <input
+                                                    type="text"
+                                                    value={item.date}
+                                                    onChange={(e) => handleAgendaChange(i, 'date', e.target.value)}
+                                                    className="w-full p-2 border rounded text-sm"
+                                                    placeholder="Contoh: 15 Januari 2026"
+                                                />
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Lokasi</label>
+                                                <input
+                                                    type="text"
+                                                    value={item.location}
+                                                    onChange={(e) => handleAgendaChange(i, 'location', e.target.value)}
+                                                    className="w-full p-2 border rounded text-sm"
+                                                    placeholder="Tempat pelaksanaan..."
+                                                />
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Deskripsi Singkat</label>
+                                                <textarea
+                                                    rows="3"
+                                                    value={item.desc}
+                                                    onChange={(e) => handleAgendaChange(i, 'desc', e.target.value)}
+                                                    className="w-full p-2 border rounded text-sm"
+                                                    placeholder="Deskripsi singkat kegiatan..."
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+
+                                <button
+                                    onClick={addAgenda}
+                                    className="w-full py-4 border-2 border-dashed border-blue-300 text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition flex items-center justify-center gap-2"
+                                >
+                                    <LayoutDashboard size={20} /> Tambah Agenda Baru
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                {activeTab === 'leaders' && (
+                    <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                        <div className="flex justify-between items-center border-b pb-6 mb-6">
+                            <h3 className="text-2xl font-bold text-gray-800">Susunan Pengurus Sekolah</h3>
+                            <button onClick={handleSaveAbout} className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center gap-2 font-bold"><Save size={18} /> Simpan Perubahan</button>
+                        </div>
+
+                        <div className="space-y-6">
+                            <h4 className="text-lg font-bold text-blue-900 bg-blue-50 p-2 rounded">Daftar Pengurus</h4>
+                            <div className="grid grid-cols-2 gap-6">
                                 {aboutLeaders.map((leader, i) => (
-                                    <div key={i} className="border p-4 rounded bg-gray-50 relative">
-                                        <button onClick={() => removeLeader(i)} className="absolute top-2 right-2 text-red-500 hover:text-red-700 font-bold">X</button>
-                                        <div className="space-y-2">
-                                            <input type="text" value={leader.name} onChange={(e) => handleLeaderChange(i, 'name', e.target.value)} placeholder="Nama" className="w-full p-1 border rounded text-sm font-bold" />
-                                            <input type="text" value={leader.role} onChange={(e) => handleLeaderChange(i, 'role', e.target.value)} placeholder="Jabatan" className="w-full p-1 border rounded text-sm" />
-                                            <div className="flex items-center gap-2">
-                                                <img src={leader.img} className="w-10 h-10 rounded-full object-cover bg-gray-300" />
-                                                <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e.target.files[0], (res) => handleLeaderChange(i, 'img', res))} className="text-xs w-full" />
+                                    <div key={i} className="border p-6 rounded-xl bg-gray-50 relative shadow-sm group hover:shadow-md transition">
+                                        <button onClick={() => removeLeader(i)} className="absolute top-3 right-3 text-red-400 hover:text-red-600 font-bold bg-white rounded-full p-1 border border-red-100 shadow-sm">
+                                            <LogOut size={16} className="rotate-180" /> {/* Using LogOut icon as delete icon temporarily if X is wanted, but X is better. Let's stick to simple X text or import X icon later. X text is robust. */}
+                                            <span className="sr-only">Hapus</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                        </button>
+
+                                        <div className="flex flex-col items-center text-center space-y-4">
+                                            <div className="relative group-avatar w-24 h-24">
+                                                <img src={leader.img} className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md mx-auto" />
+                                                <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-avatar-hover:opacity-100 flex items-center justify-center transition cursor-pointer">
+                                                    <label className="text-white text-xs font-bold cursor-pointer w-full h-full flex items-center justify-center rounded-full">
+                                                        Ubah
+                                                        <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e.target.files[0], (res) => handleLeaderChange(i, 'img', res))} className="hidden" />
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div className="w-full space-y-2">
+                                                <div>
+                                                    <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Nama Lengkap</label>
+                                                    <input type="text" value={leader.name} onChange={(e) => handleLeaderChange(i, 'name', e.target.value)} placeholder="Nama Lengkap" className="w-full p-2 border rounded text-center font-bold text-gray-800" />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Jabatan</label>
+                                                    <input type="text" value={leader.role} onChange={(e) => handleLeaderChange(i, 'role', e.target.value)} placeholder="Contoh: Ketua" className="w-full p-2 border rounded text-center text-blue-600" />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                            <button type="button" onClick={addLeader} className="w-full py-2 border-2 border-dashed border-blue-300 text-blue-600 font-bold rounded hover:bg-blue-50">+ Tambah Pimpinan</button>
-                        </section>
-
-                    </div>
-                )}
-
-                {activeTab === 'lecturers' && (
-                    <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
-                        <h3 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-4">Edit Data Dosen</h3>
-                        <div className="space-y-6">
-                            {adminLecturers.map((lecturer, i) => (
-                                <div key={i} className="flex gap-6 p-4 border rounded-lg bg-gray-50 items-start">
-                                    <div className="w-24 h-24 shrink-0 bg-gray-200 rounded overflow-hidden relative group">
-                                        <img src={lecturer.img} className="w-full h-full object-cover" />
-                                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition gap-2">
-                                            <label className="cursor-pointer text-white text-xs text-center border border-white px-2 py-1 rounded hover:bg-white hover:text-black transition">
-                                                Ganti
-                                                <input type="file" className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e.target.files[0], (res) => handleAdminLecturerChange(i, 'img', res))} />
-                                            </label>
-                                            <button
-                                                onClick={() => handleAdminLecturerChange(i, 'img', 'https://via.placeholder.com/300')}
-                                                className="text-red-400 text-xs font-bold hover:text-red-200"
-                                            >
-                                                Hapus Foto
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className="flex-1 space-y-3">
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase">Nama Lengkap & Gelar</label>
-                                            <input type="text" value={lecturer.name} onChange={(e) => handleAdminLecturerChange(i, 'name', e.target.value)} className="w-full p-2 border rounded font-bold text-gray-800" placeholder="Contoh: Dr. Budi Santoso" />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase">Mata Kuliah / Jabatan</label>
-                                            <input type="text" value={lecturer.role} onChange={(e) => handleAdminLecturerChange(i, 'role', e.target.value)} className="w-full p-2 border rounded text-blue-600" placeholder="Contoh: Dosen Dogmatika" />
-                                        </div>
-                                    </div>
-                                    <button onClick={() => removeAdminLecturer(i)} className="text-red-500 hover:text-red-700 p-2">
-                                        Hapus
-                                    </button>
-                                </div>
-                            ))}
-
-                            <button onClick={addAdminLecturer} className="w-full py-3 border-2 border-dashed border-blue-300 text-blue-600 font-bold rounded-lg hover:bg-blue-50 transition">
-                                + Tambah Dosen Baru
-                            </button>
-
-                            <div className="pt-4 border-t flex justify-end">
-                                <button onClick={handleSaveLecturers} className="bg-green-600 text-white px-8 py-3 rounded hover:bg-green-700 flex items-center gap-2 font-bold shadow-lg">
-                                    <Save size={20} /> Simpan Perubahan Dosen
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {activeTab === 'programs' && (
-                    <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
-                        <div className="flex justify-between items-center border-b pb-6 mb-6">
-                            <h3 className="text-2xl font-bold text-gray-800">Edit Program Studi</h3>
-                            <button onClick={handleSavePrograms} className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center gap-2 font-bold"><Save size={18} /> Simpan Perubahan</button>
-                        </div>
-
-                        <div className="space-y-8">
-                            {adminPrograms.map((prog, i) => (
-                                <div key={i} className="border rounded-xl p-6 bg-gray-50 relative group">
-                                    <button onClick={() => removeProgram(i)} className="absolute top-4 right-4 text-red-400 hover:text-red-600 font-bold">Hapus Program</button>
-
-                                    <div className="grid md:grid-cols-2 gap-6 mb-6">
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Jenjang</label>
-                                            <input type="text" value={prog.level} onChange={(e) => handleProgramChange(i, 'level', e.target.value)} className="w-full p-2 border rounded font-bold" placeholder="Contoh: Sarjana (S1)" />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Program</label>
-                                            <input type="text" value={prog.title} onChange={(e) => handleProgramChange(i, 'title', e.target.value)} className="w-full p-2 border rounded font-bold text-blue-900" placeholder="Contoh: Sarjana Teologi" />
-                                        </div>
-                                        <div className="md:col-span-2">
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Deskripsi</label>
-                                            <textarea rows="2" value={prog.desc} onChange={(e) => handleProgramChange(i, 'desc', e.target.value)} className="w-full p-2 border rounded" />
-                                        </div>
-                                        <div className="md:col-span-2">
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Warna Tema</label>
-                                            <div className="flex flex-wrap gap-3">
-                                                {Object.entries(THEME_COLORS).map(([name, theme]) => (
-                                                    <button
-                                                        key={name}
-                                                        type="button"
-                                                        onClick={() => handleProgramChange(i, 'color', theme.value)}
-                                                        className={`w-8 h-8 rounded-full ${theme.hex} border-2 transition-transform hover:scale-110 ${prog.color === theme.value ? 'border-black scale-110 shadow-lg ring-2 ring-offset-2 ring-blue-500' : 'border-transparent'}`}
-                                                        title={name}
-                                                    />
-                                                ))}
-                                            </div>
-                                            <p className="text-xs text-gray-400 mt-2">
-                                                Terpilih: {Object.keys(THEME_COLORS).find(key => THEME_COLORS[key].value === prog.color) || "Custom"}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="bg-white p-4 rounded border">
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Fitur Unggulan</label>
-                                        <div className="space-y-2">
-                                            {prog.features && prog.features.map((feat, fIdx) => (
-                                                <div key={fIdx} className="flex gap-2">
-                                                    <input type="text" value={feat} onChange={(e) => handleFeatureChange(i, fIdx, e.target.value)} className="flex-1 p-2 border rounded text-sm" placeholder="Fitur..." />
-                                                    <button onClick={() => removeFeature(i, fIdx)} className="text-red-400 hover:text-red-600 font-bold px-2">X</button>
-                                                </div>
-                                            ))}
-                                            <button onClick={() => addFeature(i)} className="text-sm text-blue-600 font-bold hover:underline">+ Tambah Fitur</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-
-                            <button onClick={addProgram} className="w-full py-3 border-2 border-dashed border-blue-300 text-blue-600 font-bold rounded-lg hover:bg-blue-50 transition">
-                                + Tambah Program Baru
+                            <button type="button" onClick={addLeader} className="w-full py-4 border-2 border-dashed border-blue-300 text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition flex items-center justify-center gap-2">
+                                + Tambah Pengurus Baru
                             </button>
                         </div>
                     </div>
                 )}
-                {activeTab === 'news' && (
-                    <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
-                        <div className="flex justify-between items-center border-b pb-6 mb-6">
-                            <h3 className="text-2xl font-bold text-gray-800">Kelola Berita & Artikel</h3>
-                            <button
-                                onClick={() => {
-                                    updateNews(adminNews);
-                                    alert("Berita berhasil disimpan!");
-                                }}
-                                className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center gap-2 font-bold"
-                            >
-                                <Save size={18} /> Simpan Perubahan
-                            </button>
-                        </div>
-
-                        <div className="space-y-6">
-                            {adminNews.map((item, i) => (
-                                <div key={i} className="border rounded-xl p-6 bg-gray-50 relative group">
-                                    <button
-                                        onClick={() => {
-                                            if (window.confirm("Hapus berita ini?")) {
-                                                setAdminNews(adminNews.filter((_, idx) => idx !== i));
-                                            }
-                                        }}
-                                        className="absolute top-4 right-4 text-red-400 hover:text-red-600 font-bold bg-white px-3 py-1 rounded shadow-sm border border-red-100"
-                                    >
-                                        Hapus
-                                    </button>
-
-                                    <div className="grid md:grid-cols-3 gap-6">
-                                        {/* Image Section */}
-                                        <div className="md:col-span-1">
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Gambar Sampul</label>
-                                            <div className="aspect-video bg-gray-200 rounded overflow-hidden relative group-image">
-                                                <img src={item.image || "https://via.placeholder.com/300x200"} className="w-full h-full object-cover" />
-                                                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
-                                                    <label className="cursor-pointer bg-white text-gray-900 text-xs px-3 py-1 rounded font-bold hover:bg-gray-100">
-                                                        Ubah Foto
-                                                        <input
-                                                            type="file"
-                                                            className="hidden"
-                                                            accept="image/*"
-                                                            onChange={(e) => handleImageUpload(e.target.files[0], (res) => handleNewsChange(i, 'image', res))}
-                                                        />
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Content Section */}
-                                        <div className="md:col-span-2 space-y-4">
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div>
-                                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal</label>
-                                                    <input
-                                                        type="text"
-                                                        value={item.date}
-                                                        onChange={(e) => handleNewsChange(i, 'date', e.target.value)}
-                                                        className="w-full p-2 border rounded text-sm"
-                                                        placeholder="20 Des 2025"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Penulis</label>
-                                                    <input
-                                                        type="text"
-                                                        value={item.author || ""}
-                                                        onChange={(e) => handleNewsChange(i, 'author', e.target.value)}
-                                                        className="w-full p-2 border rounded text-sm"
-                                                        placeholder="Humas"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div>
-                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Judul Berita</label>
-                                                <input
-                                                    type="text"
-                                                    value={item.title}
-                                                    onChange={(e) => handleNewsChange(i, 'title', e.target.value)}
-                                                    className="w-full p-2 border rounded font-bold text-blue-900"
-                                                    placeholder="Judul Berita..."
-                                                />
-                                            </div>
-
-                                            <div>
-                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Ringkasan (Daftar Depan)</label>
-                                                <textarea
-                                                    rows="2"
-                                                    value={item.excerpt}
-                                                    onChange={(e) => handleNewsChange(i, 'excerpt', e.target.value)}
-                                                    className="w-full p-2 border rounded text-sm"
-                                                    placeholder="Ringkasan singkat untuk tampilan kartu..."
-                                                />
-                                            </div>
-
-                                            <div>
-                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Isi Berita Lengkap</label>
-                                                <textarea
-                                                    rows="6"
-                                                    value={item.content || ""}
-                                                    onChange={(e) => handleNewsChange(i, 'content', e.target.value)}
-                                                    className="w-full p-2 border rounded text-sm font-mono bg-white"
-                                                    placeholder="Isi berita lengkap..."
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-
-                            <button
-                                onClick={() => setAdminNews([{ id: Date.now(), date: "", title: "Berita Baru", excerpt: "", content: "", image: "", author: "" }, ...adminNews])}
-                                className="w-full py-4 border-2 border-dashed border-blue-300 text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition flex items-center justify-center gap-2"
-                            >
-                                <LayoutDashboard size={20} /> Tambah Berita Baru
-                            </button>
-                        </div>
-                    </div>
-                )}
-                {activeTab === 'agenda' && (
-                    <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
-                        <div className="flex justify-between items-center border-b pb-6 mb-6">
-                            <h3 className="text-2xl font-bold text-gray-800">Kelola Agenda Kampus</h3>
-                            <button
-                                onClick={() => {
-                                    updateAgenda(adminAgendaList);
-                                    alert("Agenda berhasil disimpan!");
-                                }}
-                                className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center gap-2 font-bold"
-                            >
-                                <Save size={18} /> Simpan Perubahan
-                            </button>
-                        </div>
-
-                        <div className="space-y-6">
-                            {adminAgendaList.map((item, i) => (
-                                <div key={i} className="border rounded-xl p-6 bg-gray-50 relative group">
-                                    <button
-                                        onClick={() => {
-                                            if (window.confirm("Hapus agenda ini?")) {
-                                                setAdminAgendaList(adminAgendaList.filter((_, idx) => idx !== i));
-                                            }
-                                        }}
-                                        className="absolute top-4 right-4 text-red-400 hover:text-red-600 font-bold bg-white px-3 py-1 rounded shadow-sm border border-red-100"
-                                    >
-                                        Hapus
-                                    </button>
-
-                                    <div className="grid md:grid-cols-2 gap-6">
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Agenda / Kegiatan</label>
-                                            <input
-                                                type="text"
-                                                value={item.title}
-                                                onChange={(e) => handleAgendaChange(i, 'title', e.target.value)}
-                                                className="w-full p-2 border rounded font-bold text-blue-900"
-                                                placeholder="Judul Agenda..."
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal</label>
-                                            <input
-                                                type="text"
-                                                value={item.date}
-                                                onChange={(e) => handleAgendaChange(i, 'date', e.target.value)}
-                                                className="w-full p-2 border rounded text-sm"
-                                                placeholder="Contoh: 15 Januari 2026"
-                                            />
-                                        </div>
-                                        <div className="md:col-span-2">
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Lokasi</label>
-                                            <input
-                                                type="text"
-                                                value={item.location}
-                                                onChange={(e) => handleAgendaChange(i, 'location', e.target.value)}
-                                                className="w-full p-2 border rounded text-sm"
-                                                placeholder="Tempat pelaksanaan..."
-                                            />
-                                        </div>
-                                        <div className="md:col-span-2">
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Deskripsi Singkat</label>
-                                            <textarea
-                                                rows="3"
-                                                value={item.desc}
-                                                onChange={(e) => handleAgendaChange(i, 'desc', e.target.value)}
-                                                className="w-full p-2 border rounded text-sm"
-                                                placeholder="Deskripsi singkat kegiatan..."
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-
-                            <button
-                                onClick={addAgenda}
-                                className="w-full py-4 border-2 border-dashed border-blue-300 text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition flex items-center justify-center gap-2"
-                            >
-                                <LayoutDashboard size={20} /> Tambah Agenda Baru
-                            </button>
-                        </div>
-                    </div>
-                )}
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 
