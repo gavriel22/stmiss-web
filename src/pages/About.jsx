@@ -5,7 +5,7 @@ import { useData } from '../context/DataContext';
 
 // 1. Hero About
 const AboutHero = ({ data }) => (
-    <section className="relative h-[400px] flex items-center mt-[105px] bg-blue-900 overflow-hidden">
+    <section className="relative h-[300px] md:h-[400px] flex items-center mt-[105px] bg-blue-900 overflow-hidden">
         <div className="absolute inset-0 bg-blue-950/80 z-10"></div>
         <img
             src={data.image}
@@ -13,7 +13,7 @@ const AboutHero = ({ data }) => (
             alt="Library ST Missiologia"
         />
         <div className="relative z-20 container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{data.title}</h1>
+            <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">{data.title}</h1>
             <div className="w-24 h-1 bg-yellow-500 mx-auto"></div>
             <p className="text-blue-100 mt-6 max-w-2xl mx-auto text-lg">
                 {data.desc}

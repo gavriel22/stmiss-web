@@ -19,10 +19,10 @@ const Hero = ({ title, desc, images }) => {
         return () => clearInterval(interval);
     }, [images]);
 
-    const currentImage = images && images.length > 0 ? images[currentIndex] : "";
+
 
     return (
-        <section className="relative min-h-[550px] flex items-center mt-[105px] bg-blue-900 overflow-hidden py-20">
+        <section className="relative min-h-[500px] md:min-h-[550px] flex items-center mt-[105px] bg-blue-900 overflow-hidden py-20">
             {/* Background Image with Fade Effect */}
             {images && images.map((img, index) => (
                 <div
@@ -43,17 +43,17 @@ const Hero = ({ title, desc, images }) => {
                 <span className="inline-block bg-yellow-500 text-blue-950 px-3 py-1 text-xs font-bold rounded mb-4 tracking-wider">
                     SEKOLAH TEOLOGI MISIONER
                 </span>
-                <h1 className="text-5xl md:text-6xl font-bold mb-5 leading-tight max-w-3xl">
+                <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-5 leading-tight max-w-3xl">
                     {title}
                 </h1>
-                <p className="text-xl max-w-2xl mb-10 text-gray-100">
+                <p className="text-lg md:text-xl max-w-2xl mb-10 text-gray-100">
                     {desc}
                 </p>
-                <div className="flex gap-4">
-                    <Link to="/admission" className="bg-yellow-500 text-blue-950 font-bold px-8 py-3 rounded hover:bg-yellow-400 transition duration-300 flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <Link to="/admission" className="bg-yellow-500 text-blue-950 font-bold px-8 py-3 rounded hover:bg-yellow-400 transition duration-300 flex items-center justify-center gap-2">
                         Daftar Sekarang <ArrowRight size={18} />
                     </Link>
-                    <Link to="/scholarship" className="border-2 border-white text-white px-8 py-3 rounded hover:bg-white/10 transition duration-300">
+                    <Link to="/scholarship" className="border-2 border-white text-white px-8 py-3 rounded hover:bg-white/10 transition duration-300 text-center">
                         Skema Beasiswa
                     </Link>
                 </div>
@@ -79,15 +79,14 @@ const Hero = ({ title, desc, images }) => {
 // 2. Section Sekilas Info
 const StatsSection = ({ stats }) => {
     if (!stats) return null;
-    const icons = { "/kurikulum-kontekstual": BookOpenText, "/dosen": Users, "#location": MapPin }; // Mapping rudimentary
 
     return (
         <section className="py-16 bg-white relative z-30 -mt-16 shadow-xl rounded-t-3xl container mx-auto px-4 max-w-6xl">
-            <div className="grid md:grid-cols-3 gap-8 text-center">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-gray-100">
                 {stats.map((stat, index) => {
                     const Icon = index === 0 ? BookOpenText : (index === 1 ? Users : (index === 2 ? MapPin : Phone)); // Fallback icon mapping
                     return (
-                        <div key={stat.id} className="flex flex-col items-center p-6 border-r border-gray-100 last:border-r-0 hover:bg-yellow-50 transition duration-300 cursor-pointer group">
+                        <div key={stat.id} className="flex flex-col items-center p-6 hover:bg-yellow-50 transition duration-300 cursor-pointer group">
                             {stat.link?.startsWith('#') ? (
                                 <a href={stat.link} className="flex flex-col items-center">
                                     <Icon size={40} className="text-yellow-500 mb-4 group-hover:scale-110 transition" />

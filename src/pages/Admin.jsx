@@ -22,7 +22,7 @@ const THEME_COLORS = {
 const Admin = () => {
     // --- ALL HOOKS MUST BE AT THE TOP (before any conditional returns) ---
     const navigate = useNavigate();
-    const { siteData, updateHero, updateHomeSections, aboutData, updateAbout, updateLecturers, updatePrograms, updateNews, updateAgenda } = useData();
+    const { siteData, updateHomeSections, aboutData, updateAbout, updateLecturers, updatePrograms, updateNews, updateAgenda } = useData();
 
     // Auth state
     const [user, setUser] = useState(null);
@@ -138,8 +138,6 @@ const Admin = () => {
         newNews[index] = { ...newNews[index], [field]: value };
         setAdminNews(newNews);
     };
-    const addNews = () => setAdminNews([...adminNews, { id: Date.now(), date: "", title: "", excerpt: "" }]);
-    const removeNews = (index) => setAdminNews(adminNews.filter((_, i) => i !== index));
 
     // --- State Agenda List ---
     const handleAgendaChange = (index, field, value) => {
@@ -148,8 +146,8 @@ const Admin = () => {
         setAdminAgendaList(newAgenda);
     };
     const addAgenda = () => setAdminAgendaList([...adminAgendaList, { id: Date.now(), date: "", title: "Agenda Baru", location: "", desc: "" }]);
-    const removeAgenda = (index) => setAdminAgendaList(adminAgendaList.filter((_, i) => i !== index));
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const handleSaveAbout = async (e) => {
         e.preventDefault();
         await updateAbout({

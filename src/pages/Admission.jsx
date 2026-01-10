@@ -93,7 +93,7 @@ const RequirementsSection = () => {
                     <h2 className="text-2xl font-bold text-blue-900 mb-8 flex items-center gap-3">
                         <FileText className="text-yellow-500" /> Persyaratan Administrasi
                     </h2>
-                    <div className="grid md:grid-cols-2 gap-y-4 gap-x-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
                         {reqs.map((req, idx) => (
                             <div key={idx} className="flex items-start gap-3">
                                 <CheckSquare size={20} className="text-green-500 flex-shrink-0 mt-1" />
@@ -125,7 +125,7 @@ const TuitionFees = () => (
                 </div>
 
                 {/* S2 */}
-                <div className="border border-gray-200 rounded-xl p-8 shadow-md transform scale-105 z-10 bg-white relative overflow-hidden">
+                <div className="border border-gray-200 rounded-xl p-8 shadow-md md:transform md:scale-105 z-10 bg-white relative overflow-hidden my-4 md:my-0">
                     <div className="absolute top-0 right-0 bg-yellow-500 text-xs font-bold px-3 py-1 text-white rounded-bl-lg">POPULER</div>
                     <div className="absolute top-0 left-0 w-full h-2 bg-yellow-500"></div>
                     <h3 className="text-xl font-bold text-gray-800 mb-2">Magister (S2)</h3>

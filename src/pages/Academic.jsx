@@ -4,7 +4,7 @@ import { Header, Footer } from '../components/Layout';
 import { BookOpen, GraduationCap, Calendar, FileText, CheckCircle } from 'lucide-react';
 
 const AcademicHero = () => (
-    <section className="relative h-[400px] flex items-center mt-[105px] bg-blue-900 overflow-hidden">
+    <section className="relative h-[300px] md:h-[400px] flex items-center mt-[105px] bg-blue-900 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-950/90 to-blue-900/70 z-10"></div>
         <img
             src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
@@ -12,7 +12,7 @@ const AcademicHero = () => (
             alt="Academic Atmosphere"
         />
         <div className="relative z-20 container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Akademik</h1>
+            <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">Akademik</h1>
             <div className="w-24 h-1 bg-yellow-500 mx-auto"></div>
             <p className="text-blue-100 mt-6 max-w-2xl mx-auto text-lg">
                 Menjelajahi program studi, kurikulum, dan kegiatan akademik yang dirancang untuk memperlengkapi pemimpin masa depan.
