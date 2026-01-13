@@ -1,10 +1,7 @@
 // src/pages/Academic.jsx
-import React from 'react';
 import { Header, Footer } from '../components/Layout';
-import { BookOpen, GraduationCap, Calendar, FileText, CheckCircle } from 'lucide-react';
+import { GraduationCap, Calendar, CheckCircle } from 'lucide-react';
 import { useData } from '../context/DataContext';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 const AcademicHero = () => (
     <section className="relative h-[300px] md:h-[400px] flex items-center mt-[105px] bg-blue-900 overflow-hidden">
@@ -96,38 +93,6 @@ const AcademicCalendar = () => {
     const calendarData = siteData?.academicCalendar || { yearLabel: "Semester Ganjil 2026/2027", events: [] };
     const events = calendarData.events || [];
 
-    const handleDownloadPDF = async () => {
-        try {
-            const input = document.getElementById('calendar-table');
-            if (!input) {
-                alert("Element kalender tidak ditemukan!");
-                return;
-            }
-
-            const canvas = await html2canvas(input, { scale: 2 });
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const imgProps = pdf.getImageProperties(imgData);
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-            // Add Header
-            pdf.setFontSize(18);
-            pdf.setTextColor(30, 58, 138); // blue-900
-            pdf.text("Kalender Akademik ST Missiologia", 105, 20, null, null, "center");
-
-            pdf.setFontSize(14);
-            pdf.setTextColor(100);
-            pdf.text(calendarData.yearLabel || "", 105, 30, null, null, "center");
-
-            pdf.addImage(imgData, 'PNG', 0, 40, pdfWidth, pdfHeight);
-            pdf.save(`Kalender_Akademik_${calendarData.yearLabel.replace(/[\/\s]/g, '_')}.pdf`);
-        } catch (error) {
-            console.error("Gagal download PDF:", error);
-            alert("Maaf, terjadi kesalahan saat mendownload PDF. Silakan coba lagi.");
-        }
-    };
-
     return (
         <section className="py-20 bg-gray-50">
             <div className="container mx-auto px-4 max-w-5xl">
@@ -176,11 +141,6 @@ const AcademicCalendar = () => {
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-                        <div className="mt-6 text-right">
-                            <button onClick={handleDownloadPDF} className="text-blue-900 font-bold hover:text-yellow-600 flex items-center gap-2 ml-auto cursor-pointer">
-                                <FileText size={18} /> Download Kalender Lengkap (PDF)
-                            </button>
                         </div>
                     </div>
                 </div>
