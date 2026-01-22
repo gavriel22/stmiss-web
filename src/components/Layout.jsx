@@ -56,7 +56,7 @@ export const Header = () => {
               <Link to="/agenda" className="block px-4 py-3 hover:bg-yellow-50 hover:text-blue-900 text-sm">Agenda Kampus</Link>
             </div>
           </div>
-          <Link to="https://stmiss.vercel.app/" target='_blank' className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 font-bold">Pendaftaran</Link>
+          <Link to="https://stmiss.vercel.app/" target='_blank' className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 font-bold">Pendaftaran/Login</Link>
         </nav>
 
         {/* Mobile Menu Button */}
