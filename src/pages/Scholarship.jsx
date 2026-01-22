@@ -43,9 +43,6 @@ const ScholarshipTypes = ({ items }) => {
                             </div>
                             <h3 className="text-xl font-bold text-gray-800 mb-4">{sch.title}</h3>
                             <p className="text-gray-600 leading-relaxed mb-6">{sch.desc}</p>
-                            <button className="text-sm font-bold text-blue-900 border-b-2 border-blue-900 hover:text-yellow-600 hover:border-yellow-600 transition pb-1">
-                                Syarat & Ketentuan &rarr;
-                            </button>
                         </div>
                     ))}
                 </div>
