@@ -77,9 +77,7 @@ const ProgramsDetail = () => {
                                     ))}
                                 </ul>
                             </div>
-                            <button className="w-full mt-4 border border-gray-300 text-gray-700 font-bold py-2.5 rounded-lg hover:bg-gray-50 transition">
-                                Unduh Kurikulum
-                            </button>
+
                         </div>
                     ))}
                 </div>

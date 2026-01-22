@@ -53,11 +53,7 @@ const Programs = () => {
                                             ))}
                                         </ul>
 
-                                        <div className="pt-6">
-                                            <button className="bg-blue-900 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-800 transition flex items-center gap-2">
-                                                Info Pendaftaran <ArrowRight size={18} />
-                                            </button>
-                                        </div>
+
                                     </div>
                                     <div className="flex-1 w-full relative">
                                         <div className={`aspect-video rounded-xl overflow-hidden shadow-inner ${prog.color.replace('text-', 'bg-').split(' ')[1]} flex items-center justify-center`}>

@@ -44,6 +44,45 @@ export const DEFAULT_SITE_DATA = {
             { id: 5, date: "10-14 Oktober 2026", event: "Ujian Tengah Semester (UTS)", type: "Ujian" },
             { id: 6, date: "15 Desember 2026", event: "Natal Kampus & Libur Akhir Tahun", type: "Perayaan" }
         ]
+    },
+    scholarshipPage: {
+        hero: {
+            title: "Program Beasiswa",
+            desc: "Kami percaya panggilan Tuhan tidak boleh terhalang oleh kendala biaya. Temukan opsi dukungan finansial Anda di sini.",
+            image: "https://images.unsplash.com/photo-1544531586-fde5298cdd40?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+        },
+        items: [
+            {
+                id: 1,
+                title: "Beasiswa Prestasi Akademik",
+                desc: "Diberikan kepada calon mahasiswa dengan nilai rapor rata-rata > 8.5 dan mempertahankan IPK 3.50.",
+                color: "bg-blue-900 text-white"
+            },
+            {
+                id: 2,
+                title: "Beasiswa Utusan Gereja",
+                desc: "Potongan biaya studi bagi mahasiswa yang diutus resmi oleh sinode gereja mitra ST Missiologia.",
+                color: "bg-yellow-500 text-blue-900"
+            },
+            {
+                id: 3,
+                title: "Beasiswa Peduli Kasih",
+                desc: "Bantuan finansial bagi mahasiswa dari keluarga kurang mampu atau yatim piatu (perlu SKU).",
+                color: "bg-red-700 text-white"
+            }
+        ],
+        eligibility: [
+            "Warga Negara Indonesia (WNI)",
+            "Telah mendaftar sebagai calon mahasiswa ST Missiologia",
+            "Memiliki rekomendasi karakter yang baik dari gereja asal",
+            "Tidak sedang menerima beasiswa dari institusi lain",
+            "Bersedia menandatangani kontrak ikatan dinas (khusus Beasiswa Penuh)"
+        ],
+        faqs: [
+            { q: "Kapan saya bisa mendaftar beasiswa?", a: "Pendaftaran beasiswa dibuka bersamaan dengan gelombang penerimaan mahasiswa baru." },
+            { q: "Apakah beasiswa menanggung biaya hidup?", a: "Tergantung jenis beasiswa. Beasiswa Penuh mencakup asrama dan konsumsi." },
+            { q: "Bagaimana jika IPK saya turun?", a: "Beasiswa Prestasi akan dievaluasi setiap semester. Jika IPK di bawah standar, beasiswa dapat dicabut." }
+        ]
     }
 };
 

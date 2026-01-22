@@ -161,6 +161,17 @@ export const DataProvider = ({ children }) => {
     }
   };
 
+  const updateScholarship = async (scholarshipData) => {
+    try {
+      const newData = { ...siteData, scholarshipPage: scholarshipData };
+      await setDoc(siteDocRef, newData);
+      console.log("Scholarship data save successful!");
+    } catch (error) {
+      console.error("Error saving scholarship data:", error);
+      alert("Gagal menyimpan: " + error.message);
+    }
+  };
+
   // Loading state before data is fetched
   if (loading) {
     return (
@@ -174,7 +185,7 @@ export const DataProvider = ({ children }) => {
   }
 
   return (
-    <DataContext.Provider value={{ siteData, updateHero, aboutData, updateAbout, updateLecturers, updatePrograms, updateHomeSections, updateNews, updateAgenda, updateAcademicCalendar }}>
+    <DataContext.Provider value={{ siteData, updateHero, aboutData, updateAbout, updateLecturers, updatePrograms, updateHomeSections, updateNews, updateAgenda, updateAcademicCalendar, updateScholarship }}>
       {children}
     </DataContext.Provider>
   );

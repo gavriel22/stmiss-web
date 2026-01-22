@@ -22,7 +22,7 @@ const THEME_COLORS = {
 const Admin = () => {
     // --- ALL HOOKS MUST BE AT THE TOP (before any conditional returns) ---
     const navigate = useNavigate();
-    const { siteData, updateHomeSections, aboutData, updateAbout, updateLecturers, updatePrograms, updateNews, updateAgenda, updateAcademicCalendar } = useData();
+    const { siteData, updateHomeSections, aboutData, updateAbout, updateLecturers, updatePrograms, updateNews, updateAgenda, updateAcademicCalendar, updateScholarship } = useData();
 
     // Auth state
     const [user, setUser] = useState(null);
@@ -38,6 +38,7 @@ const Admin = () => {
     const [adminAgendaList, setAdminAgendaList] = useState(Array.isArray(siteData?.agenda) ? siteData.agenda : (siteData?.agenda ? [siteData.agenda] : []));
     const [adminLocation, setAdminLocation] = useState(siteData?.location || {});
     const [adminCalendar, setAdminCalendar] = useState(siteData?.academicCalendar || { yearLabel: "", events: [] });
+    const [adminScholarship, setAdminScholarship] = useState(siteData?.scholarshipPage || { hero: {}, items: [], eligibility: [], faqs: [] });
 
     // --- State About ---
     const [aboutHero, setAboutHero] = useState(aboutData?.hero || {});
@@ -78,6 +79,7 @@ const Admin = () => {
             setAdminLecturers(siteData.lecturers || []);
             setAdminPrograms(siteData.programs || []);
             setAdminCalendar(siteData.academicCalendar || { yearLabel: "", events: [] });
+            setAdminScholarship(siteData.scholarshipPage || { hero: {}, items: [], eligibility: [], faqs: [] });
         }
     }, [siteData]);
 
@@ -285,6 +287,14 @@ const Admin = () => {
         alert("Kalender Akademik berhasil disimpan!");
     };
 
+    // Helpers for Scholarship
+    const handleSaveScholarship = async () => {
+        await updateScholarship(adminScholarship);
+        alert("Data Beasiswa berhasil disimpan!");
+    };
+
+    // ... add more helpers if needed inline or here. Using direct modifications in UI for simplicity where possible, but helpers are cleaner.
+
 
     return (
         <div className="flex h-screen bg-gray-100 font-sans">
@@ -345,6 +355,12 @@ const Admin = () => {
                         className={`w-full text-left px-4 py-3 rounded transition-colors ${activeTab === 'calendar' ? 'bg-blue-800 text-white font-bold' : 'text-blue-200 hover:bg-blue-800/50'}`}
                     >
                         Kelola Kalender
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('scholarship')}
+                        className={`w-full text-left px-4 py-3 rounded transition-colors ${activeTab === 'scholarship' ? 'bg-blue-800 text-white font-bold' : 'text-blue-200 hover:bg-blue-800/50'}`}
+                    >
+                        Kelola Beasiswa
                     </button>
                 </nav>
 
@@ -996,6 +1012,92 @@ const Admin = () => {
                         </div>
                     </div>
                 )}
+
+                {
+                    activeTab === 'scholarship' && (
+                        <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                            <div className="flex justify-between items-center border-b pb-6 mb-6">
+                                <h3 className="text-2xl font-bold text-gray-800">Kelola Halaman Beasiswa</h3>
+                                <button onClick={handleSaveScholarship} className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center gap-2 font-bold">
+                                    <Save size={18} /> Simpan Perubahan
+                                </button>
+                            </div>
+
+                            <div className="space-y-8">
+                                {/* Hero Section */}
+                                <section className="space-y-4">
+                                    <h4 className="text-lg font-bold text-blue-900 bg-blue-50 p-2 rounded">1. Hero Section</h4>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">Judul Utama</label>
+                                        <input
+                                            type="text"
+                                            value={adminScholarship.hero?.title || ""}
+                                            onChange={(e) => setAdminScholarship({ ...adminScholarship, hero: { ...adminScholarship.hero, title: e.target.value } })}
+                                            className="w-full p-2 border rounded"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">Deskripsi</label>
+                                        <textarea
+                                            rows="2"
+                                            value={adminScholarship.hero?.desc || ""}
+                                            onChange={(e) => setAdminScholarship({ ...adminScholarship, hero: { ...adminScholarship.hero, desc: e.target.value } })}
+                                            className="w-full p-2 border rounded"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">Gambar Background</label>
+                                        <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e.target.files[0], (res) => setAdminScholarship({ ...adminScholarship, hero: { ...adminScholarship.hero, image: res } }))} className="text-sm text-gray-500" />
+                                        {adminScholarship.hero?.image && <img src={adminScholarship.hero.image} className="h-20 mt-2 rounded object-cover" />}
+                                    </div>
+                                </section>
+
+                                {/* Scholarship Items */}
+                                <section className="space-y-4 pt-6 border-t">
+                                    <h4 className="text-lg font-bold text-blue-900 bg-blue-50 p-2 rounded">2. Jenis Beasiswa</h4>
+                                    {(adminScholarship.items || []).map((item, idx) => (
+                                        <div key={idx} className="border p-4 rounded bg-gray-50 relative">
+                                            <button onClick={() => {
+                                                const newItems = adminScholarship.items.filter((_, i) => i !== idx);
+                                                setAdminScholarship({ ...adminScholarship, items: newItems });
+                                            }} className="absolute top-2 right-2 text-red-500 text-xs font-bold border border-red-200 bg-white px-2 py-1 rounded">Hapus</button>
+
+                                            <div className="grid gap-3">
+                                                <div>
+                                                    <label className="text-xs font-bold text-gray-500">Nama Beasiswa</label>
+                                                    <input type="text" value={item.title} onChange={(e) => {
+                                                        const newItems = [...adminScholarship.items];
+                                                        newItems[idx] = { ...newItems[idx], title: e.target.value };
+                                                        setAdminScholarship({ ...adminScholarship, items: newItems });
+                                                    }} className="w-full p-2 border rounded" />
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs font-bold text-gray-500">Deskripsi</label>
+                                                    <textarea rows="2" value={item.desc} onChange={(e) => {
+                                                        const newItems = [...adminScholarship.items];
+                                                        newItems[idx] = { ...newItems[idx], desc: e.target.value };
+                                                        setAdminScholarship({ ...adminScholarship, items: newItems });
+                                                    }} className="w-full p-2 border rounded" />
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs font-bold text-gray-500">Warna (Tailwind Classes)</label>
+                                                    <input type="text" value={item.color} onChange={(e) => {
+                                                        const newItems = [...adminScholarship.items];
+                                                        newItems[idx] = { ...newItems[idx], color: e.target.value };
+                                                        setAdminScholarship({ ...adminScholarship, items: newItems });
+                                                    }} className="w-full p-2 border rounded font-mono text-xs" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    <button onClick={() => setAdminScholarship({ ...adminScholarship, items: [...(adminScholarship.items || []), { title: "Baru", desc: "", color: "bg-blue-900 text-white" }] })} className="text-blue-600 font-bold text-sm">+ Tambah Jenis Beasiswa</button>
+                                </section>
+
+                            </div>
+                        </div>
+                    )
+                }
+
 
             </div >
         </div >
