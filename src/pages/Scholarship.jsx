@@ -33,8 +33,7 @@ const ScholarshipTypes = ({ items }) => {
         <section className="py-20 bg-white">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl font-bold text-blue-900 mb-4">Jenis Beasiswa</h2>
-                    <p className="text-gray-600">Pilih skema yang sesuai dengan kondisi Anda</p>
+                    <h2 className="text-3xl font-bold text-blue-900 mb-4">Informasi Beasiswa</h2>
                 </div>
                 <div className="grid md:grid-cols-3 gap-8">
                     {items?.map((sch, idx) => (

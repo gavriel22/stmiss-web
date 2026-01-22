@@ -16,8 +16,8 @@ export const Header = () => {
       <div className="bg-blue-900 text-white py-2 text-xs">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-2 md:gap-0">
           <div className="flex gap-4">
-            <span className="flex items-center gap-2"><Phone size={14} /> (0274) 555-1234</span>
-            <span className="flex items-center gap-2"><Mail size={14} /> admin@stmiss.ac.id</span>
+            <span className="flex items-center gap-2"><Phone size={14} /> 0812-1562-333</span>
+            <span className="flex items-center gap-2"><Mail size={14} /> stmissygy@gmail.com</span>
           </div>
         </div>
       </div>
@@ -99,32 +99,24 @@ export const Header = () => {
 
 export const Footer = () => (
   <footer className="bg-gray-900 text-gray-300 py-12 mt-auto">
-    <div className="container mx-auto px-4 grid md:grid-cols-3 gap-8 text-sm">
-      <div>
+    <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between gap-8 text-sm">
+      <div className="md:max-w-md">
         <h3 className="text-white text-lg font-bold mb-4">Hubungi Kami</h3>
-        <p className="mb-2">Jl. Solo Km. 10, Yogyakarta</p>
-        <p className="mb-2">Telp: (0274) 555-1234</p>
+        <p className="mb-2">Sekretariat : Seropan 1 RT 01, Muntuk, Dilingo, Bantul, Yogyakarta 55783</p>
+        <p className="mb-2">Telp: 0812-1562-333, 081-7547-8006</p>
         <div className="flex gap-3 mt-4">
           <Facebook size={20} className="hover:text-yellow-500 cursor-pointer" />
           <Instagram size={20} className="hover:text-yellow-500 cursor-pointer" />
           <Youtube size={20} className="hover:text-yellow-500 cursor-pointer" />
         </div>
       </div>
-      <div>
-        <h3 className="text-white text-lg font-bold mb-4">Tautan Cepat</h3>
-        <ul className="space-y-2">
-          <li><a href="#" className="hover:text-yellow-500">Kalender Akademik</a></li>
-          <li><a href="#" className="hover:text-yellow-500">Perpustakaan Digital</a></li>
-          <li><a href="#" className="hover:text-yellow-500">Alumni</a></li>
-        </ul>
-      </div>
-      <div>
+      <div className="md:max-w-md text-left">
         <h3 className="text-white text-lg font-bold mb-4">Tentang STMiss</h3>
         <p>Berkomitmen menyelenggarakan pendidikan tinggi teologi yang berkualitas, kontekstual, dan transformatif.</p>
       </div>
     </div>
     <div className="text-center mt-10 border-t border-gray-800 pt-6 text-xs">
-      © 2026 Sekolah Tinggi Missiologia.
+      © 2026 Sekolah Tinggi Missiologia Yogyakarta.
     </div>
   </footer>
 );
