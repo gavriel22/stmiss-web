@@ -902,9 +902,9 @@ const Admin = () => {
                                         </button>
 
                                         <div className="flex flex-col items-center text-center space-y-4">
-                                            <div className="relative group-avatar w-24 h-24">
+                                            <div className="relative group/avatar w-24 h-24">
                                                 <img src={leader.img} className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md mx-auto" />
-                                                <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-avatar-hover:opacity-100 flex flex-col items-center justify-center transition cursor-pointer gap-1">
+                                                <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover/avatar:opacity-100 flex flex-col items-center justify-center transition cursor-pointer gap-1">
                                                     <label className="text-white text-xs font-bold cursor-pointer hover:underline">
                                                         Ubah
                                                         <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e.target.files[0], (res) => handleLeaderChange(i, 'img', res))} className="hidden" />
@@ -1047,8 +1047,23 @@ const Admin = () => {
                                     </div>
                                     <div>
                                         <label className="block text-sm font-bold text-gray-700 mb-1">Gambar Background</label>
-                                        <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e.target.files[0], (res) => setAdminScholarship({ ...adminScholarship, hero: { ...adminScholarship.hero, image: res } }))} className="text-sm text-gray-500" />
-                                        {adminScholarship.hero?.image && <img src={adminScholarship.hero.image} className="h-20 mt-2 rounded object-cover" />}
+                                        <div className="aspect-video bg-gray-200 rounded overflow-hidden relative group h-48">
+                                            <img
+                                                src={adminScholarship.hero?.image || "https://via.placeholder.com/800x400"}
+                                                className="w-full h-full object-cover"
+                                            />
+                                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
+                                                <label className="cursor-pointer bg-white text-gray-900 px-4 py-2 rounded font-bold hover:bg-gray-100 flex items-center gap-2">
+                                                    Pilih Foto
+                                                    <input
+                                                        type="file"
+                                                        className="hidden"
+                                                        accept="image/*"
+                                                        onChange={(e) => handleImageUpload(e.target.files[0], (res) => setAdminScholarship({ ...adminScholarship, hero: { ...adminScholarship.hero, image: res } }))}
+                                                    />
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </section>
 
@@ -1078,14 +1093,6 @@ const Admin = () => {
                                                         newItems[idx] = { ...newItems[idx], desc: e.target.value };
                                                         setAdminScholarship({ ...adminScholarship, items: newItems });
                                                     }} className="w-full p-2 border rounded" />
-                                                </div>
-                                                <div>
-                                                    <label className="text-xs font-bold text-gray-500">Warna (Tailwind Classes)</label>
-                                                    <input type="text" value={item.color} onChange={(e) => {
-                                                        const newItems = [...adminScholarship.items];
-                                                        newItems[idx] = { ...newItems[idx], color: e.target.value };
-                                                        setAdminScholarship({ ...adminScholarship, items: newItems });
-                                                    }} className="w-full p-2 border rounded font-mono text-xs" />
                                                 </div>
                                             </div>
                                         </div>
