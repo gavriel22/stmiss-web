@@ -42,7 +42,7 @@ export const Header = () => {
             <div className="absolute top-full left-0 w-56 bg-white shadow-lg rounded-lg overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50 border border-gray-100">
               <Link to="/about" className="block px-4 py-3 hover:bg-yellow-50 hover:text-blue-900 border-b border-gray-50 last:border-0 text-sm">Tentang Kami</Link>
               <Link to="/program-studi" className="block px-4 py-3 hover:bg-yellow-50 hover:text-blue-900 border-b border-gray-50 last:border-0 text-sm">Program Studi</Link>
-              <Link to="/kurikulum-kontekstual" className="block px-4 py-3 hover:bg-yellow-50 hover:text-blue-900 border-b border-gray-50 last:border-0 text-sm">Kurikulum Kontekstual</Link>
+              <Link to="/kurikulum-modular" className="block px-4 py-3 hover:bg-yellow-50 hover:text-blue-900 border-b border-gray-50 last:border-0 text-sm">Kurikulum Modular</Link>
               <Link to="/dosen" className="block px-4 py-3 hover:bg-yellow-50 hover:text-blue-900 text-sm">Dosen & Pengajar</Link>
             </div>
           </div>
@@ -75,7 +75,7 @@ export const Header = () => {
               <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">Tentang</p>
               <Link to="/about" className="block pl-4 py-2 hover:bg-gray-50 rounded" onClick={toggleMenu}>Tentang Kami</Link>
               <Link to="/program-studi" className="block pl-4 py-2 hover:bg-gray-50 rounded" onClick={toggleMenu}>Program Studi</Link>
-              <Link to="/kurikulum-kontekstual" className="block pl-4 py-2 hover:bg-gray-50 rounded" onClick={toggleMenu}>Kurikulum Modular</Link>
+              <Link to="/kurikulum-modular" className="block pl-4 py-2 hover:bg-gray-50 rounded" onClick={toggleMenu}>Kurikulum Modular</Link>
               <Link to="/dosen" className="block pl-4 py-2 hover:bg-gray-50 rounded" onClick={toggleMenu}>Dosen & Pengajar</Link>
             </div>
 
