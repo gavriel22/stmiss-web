@@ -41,7 +41,7 @@ function App() {
             <Route path="/scholarship" element={<Scholarship />} />
             <Route path="/login" element={<Login />} />
             <Route path="/admin" element={<Admin />} />
-            <Route path="/kurikulum-kontekstual" element={<ContextualCurriculum />} />
+            <Route path="/kurikulum-modular" element={<ContextualCurriculum />} />
             <Route path="/dosen" element={<Lecturers />} />
             <Route path="/program-studi" element={<Programs />} />
             <Route path="/berita" element={<News />} />

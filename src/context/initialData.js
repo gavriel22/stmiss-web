@@ -110,3 +110,26 @@ export const DEFAULT_ABOUT_DATA = {
         { name: "Sarah Wijaya, M.A", role: "PK III - Kemahasiswaan", img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80" },
     ]
 };
+
+export const DEFAULT_CURRICULUM_DATA = {
+    hero: {
+        title: "Kurikulum Modular",
+        desc: "Menjembatani kebenaran Abadi Alkitab dengan realitas dinamis budaya dan masyarakat Indonesia masa kini.",
+        image: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+    },
+    intro: {
+        title: "Apa itu Kurikulum Modular?",
+        desc1: "Di ST Missiologia, kami percaya bahwa teologi tidak lahir di ruang hampa. Teologi harus berdialog dengan konteks di mana gereja berpijak.",
+        desc2: "Kurikulum kami dirancang untuk melengkapi mahasiswa tidak hanya dengan pengetahuan Alkitab yang mendalam, tetapi juga kemampuan analisis sosial-budaya untuk menerapkan kebenaran tersebut secara relevan di tengah masyarakat Indonesia yang majemuk."
+    },
+    focusPoints: [
+        "Eksegese Alkitab yang setia pada teks aslinya.",
+        "Analisis budaya lokal dan pandangan dunia masyarakat.",
+        "Strategi komunikasi Injil yang menyentuh hati tanpa sinkretisme."
+    ],
+    pillars: [
+        { title: "Biblika-Teologis", desc: "Pondasi iman yang kokoh berdasarkan otoritas Alkitab dan warisan teologi gereja yang sehat.", icon: "BookOpen" },
+        { title: "Sosio-Antropologis", desc: "Memahami manusia Indonesia dalam keunikan suku, bahasa, dan nilai-nilai budayanya.", icon: "Users" },
+        { title: "Misi-Praktis", desc: "Keterampilan melayani: berkhotbah, konseling, dan menanam gereja yang mandiri.", icon: "Heart" }
+    ]
+};

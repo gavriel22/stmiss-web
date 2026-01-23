@@ -22,7 +22,7 @@ const THEME_COLORS = {
 const Admin = () => {
     // --- ALL HOOKS MUST BE AT THE TOP (before any conditional returns) ---
     const navigate = useNavigate();
-    const { siteData, updateHomeSections, aboutData, updateAbout, updateLecturers, updatePrograms, updateNews, updateAgenda, updateAcademicCalendar, updateScholarship } = useData();
+    const { siteData, updateHomeSections, aboutData, updateAbout, curriculumData, updateCurriculum, updateLecturers, updatePrograms, updateNews, updateAgenda, updateAcademicCalendar, updateScholarship } = useData();
 
     // Auth state
     const [user, setUser] = useState(null);
@@ -46,6 +46,9 @@ const Admin = () => {
     const [aboutVision, setAboutVision] = useState(aboutData?.vision || "");
     const [aboutMission, setAboutMission] = useState(aboutData?.mission || []);
     const [aboutLeaders, setAboutLeaders] = useState(aboutData?.leaders || []);
+
+    // --- State Curriculum ---
+    const [adminCurriculum, setAdminCurriculum] = useState(curriculumData || { hero: {}, intro: {}, focusPoints: [], pillars: [] });
 
     // --- State Lecturers ---
     const [adminLecturers, setAdminLecturers] = useState(siteData?.lecturers || []);
@@ -92,6 +95,12 @@ const Admin = () => {
             setAboutLeaders(aboutData.leaders || []);
         }
     }, [aboutData]);
+
+    useEffect(() => {
+        if (curriculumData) {
+            setAdminCurriculum(curriculumData);
+        }
+    }, [curriculumData]);
 
     // --- CONDITIONAL RETURNS (after all hooks) ---
 
@@ -293,6 +302,40 @@ const Admin = () => {
         alert("Data Beasiswa berhasil disimpan!");
     };
 
+    // Helpers for Curriculum
+    const handleSaveCurriculum = async () => {
+        await updateCurriculum(adminCurriculum);
+        alert("Data Kurikulum Modular berhasil disimpan!");
+    };
+
+    const handleCurriculumHeroChange = (field, value) => {
+        setAdminCurriculum({ ...adminCurriculum, hero: { ...adminCurriculum.hero, [field]: value } });
+    };
+
+    const handleCurriculumIntroChange = (field, value) => {
+        setAdminCurriculum({ ...adminCurriculum, intro: { ...adminCurriculum.intro, [field]: value } });
+    };
+
+    const handleFocusPointChange = (index, value) => {
+        const newPoints = [...adminCurriculum.focusPoints];
+        newPoints[index] = value;
+        setAdminCurriculum({ ...adminCurriculum, focusPoints: newPoints });
+    };
+
+    const addFocusPoint = () => {
+        setAdminCurriculum({ ...adminCurriculum, focusPoints: [...adminCurriculum.focusPoints, ""] });
+    };
+
+    const removeFocusPoint = (index) => {
+        setAdminCurriculum({ ...adminCurriculum, focusPoints: adminCurriculum.focusPoints.filter((_, i) => i !== index) });
+    };
+
+    const handlePillarChange = (index, field, value) => {
+        const newPillars = [...adminCurriculum.pillars];
+        newPillars[index] = { ...newPillars[index], [field]: value };
+        setAdminCurriculum({ ...adminCurriculum, pillars: newPillars });
+    };
+
     // ... add more helpers if needed inline or here. Using direct modifications in UI for simplicity where possible, but helpers are cleaner.
 
 
@@ -361,6 +404,12 @@ const Admin = () => {
                         className={`w-full text-left px-4 py-3 rounded transition-colors ${activeTab === 'scholarship' ? 'bg-blue-800 text-white font-bold' : 'text-blue-200 hover:bg-blue-800/50'}`}
                     >
                         Kelola Beasiswa
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('curriculum')}
+                        className={`w-full text-left px-4 py-3 rounded transition-colors ${activeTab === 'curriculum' ? 'bg-blue-800 text-white font-bold' : 'text-blue-200 hover:bg-blue-800/50'}`}
+                    >
+                        Kelola Kurikulum Modular
                     </button>
                 </nav>
 
@@ -1096,6 +1145,146 @@ const Admin = () => {
                                     <button onClick={() => setAdminScholarship({ ...adminScholarship, items: [...(adminScholarship.items || []), { title: "Baru", desc: "", color: "bg-blue-900 text-white" }] })} className="text-blue-600 font-bold text-sm">+ Tambah Jenis Beasiswa</button>
                                 </section>
 
+                            </div>
+                        </div>
+                    )
+                }
+
+                {
+                    activeTab === 'curriculum' && (
+                        <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                            <div className="flex justify-between items-center border-b pb-6 mb-6">
+                                <h3 className="text-2xl font-bold text-gray-800">Kelola Kurikulum Modular</h3>
+                                <button onClick={handleSaveCurriculum} className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center gap-2 font-bold">
+                                    <Save size={18} /> Simpan Perubahan
+                                </button>
+                            </div>
+
+                            <div className="space-y-8">
+                                {/* Hero Section */}
+                                <section className="space-y-4">
+                                    <h4 className="text-lg font-bold text-blue-900 bg-blue-50 p-2 rounded">1. Hero Section</h4>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">Judul Utama</label>
+                                        <input
+                                            type="text"
+                                            value={adminCurriculum.hero?.title || ""}
+                                            onChange={(e) => handleCurriculumHeroChange('title', e.target.value)}
+                                            className="w-full p-2 border rounded"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">Deskripsi</label>
+                                        <textarea
+                                            rows="2"
+                                            value={adminCurriculum.hero?.desc || ""}
+                                            onChange={(e) => handleCurriculumHeroChange('desc', e.target.value)}
+                                            className="w-full p-2 border rounded"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">Gambar Background</label>
+                                        <div className="aspect-video bg-gray-200 rounded overflow-hidden relative group h-48">
+                                            <img
+                                                src={adminCurriculum.hero?.image || "https://via.placeholder.com/800x400"}
+                                                className="w-full h-full object-cover"
+                                            />
+                                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
+                                                <label className="cursor-pointer bg-white text-gray-900 px-4 py-2 rounded font-bold hover:bg-gray-100 flex items-center gap-2">
+                                                    Pilih Foto
+                                                    <input
+                                                        type="file"
+                                                        className="hidden"
+                                                        accept="image/*"
+                                                        onChange={(e) => handleImageUpload(e.target.files[0], (res) => handleCurriculumHeroChange('image', res))}
+                                                    />
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                {/* Intro Section */}
+                                <section className="space-y-4 pt-6 border-t">
+                                    <h4 className="text-lg font-bold text-blue-900 bg-blue-50 p-2 rounded">2. Pendahuluan (Intro)</h4>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">Judul Intro</label>
+                                        <input
+                                            type="text"
+                                            value={adminCurriculum.intro?.title || ""}
+                                            onChange={(e) => handleCurriculumIntroChange('title', e.target.value)}
+                                            className="w-full p-2 border rounded"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">Paragraf 1</label>
+                                        <textarea
+                                            rows="3"
+                                            value={adminCurriculum.intro?.desc1 || ""}
+                                            onChange={(e) => handleCurriculumIntroChange('desc1', e.target.value)}
+                                            className="w-full p-2 border rounded"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">Paragraf 2</label>
+                                        <textarea
+                                            rows="3"
+                                            value={adminCurriculum.intro?.desc2 || ""}
+                                            onChange={(e) => handleCurriculumIntroChange('desc2', e.target.value)}
+                                            className="w-full p-2 border rounded"
+                                        />
+                                    </div>
+                                </section>
+
+                                {/* Focus Points */}
+                                <section className="space-y-4 pt-6 border-t">
+                                    <h4 className="text-lg font-bold text-blue-900 bg-blue-50 p-2 rounded">3. Fokus Utama</h4>
+                                    {(adminCurriculum.focusPoints || []).map((point, idx) => (
+                                        <div key={idx} className="flex gap-2">
+                                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center font-bold text-blue-900 shrink-0">{idx + 1}</div>
+                                            <input
+                                                type="text"
+                                                value={point}
+                                                onChange={(e) => handleFocusPointChange(idx, e.target.value)}
+                                                className="w-full p-2 border rounded"
+                                            />
+                                            <button onClick={() => removeFocusPoint(idx)} className="text-red-500 font-bold px-2">X</button>
+                                        </div>
+                                    ))}
+                                    <button onClick={addFocusPoint} className="text-blue-600 font-bold text-sm">+ Tambah Poin Fokus</button>
+                                </section>
+
+                                {/* Pillars */}
+                                <section className="space-y-4 pt-6 border-t">
+                                    <h4 className="text-lg font-bold text-blue-900 bg-blue-50 p-2 rounded">4. 3 Pilar Pendekatan</h4>
+                                    <div className="grid md:grid-cols-3 gap-4">
+                                        {(adminCurriculum.pillars || []).map((pillar, idx) => (
+                                            <div key={idx} className="border p-4 rounded bg-gray-50">
+                                                <h5 className="font-bold text-center mb-2">Pilar {idx + 1}</h5>
+                                                <div className="space-y-2">
+                                                    <div>
+                                                        <label className="text-xs font-bold text-gray-500">Judul</label>
+                                                        <input
+                                                            type="text"
+                                                            value={pillar.title}
+                                                            onChange={(e) => handlePillarChange(idx, 'title', e.target.value)}
+                                                            className="w-full p-2 border rounded text-sm"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-xs font-bold text-gray-500">Deskripsi</label>
+                                                        <textarea
+                                                            rows="3"
+                                                            value={pillar.desc}
+                                                            onChange={(e) => handlePillarChange(idx, 'desc', e.target.value)}
+                                                            className="w-full p-2 border rounded text-sm"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </section>
                             </div>
                         </div>
                     )

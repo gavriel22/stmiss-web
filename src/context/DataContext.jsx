@@ -2,19 +2,21 @@
 import React, { createContext, useState, useContext, useEffect, useMemo } from 'react';
 import { db } from '../firebase';
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
-import { DEFAULT_SITE_DATA, DEFAULT_ABOUT_DATA } from './initialData';
+import { DEFAULT_SITE_DATA, DEFAULT_ABOUT_DATA, DEFAULT_CURRICULUM_DATA } from './initialData';
 
 const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
   const [siteData, setSiteData] = useState(null);
   const [aboutData, setAboutData] = useState(null);
+  const [curriculumData, setCurriculumData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // --- Firestore References ---
   // Memoize refs so they don't trigger re-renders or exhaustive-deps warnings
   const siteDocRef = useMemo(() => doc(db, 'content', 'siteData'), []);
   const aboutDocRef = useMemo(() => doc(db, 'content', 'aboutData'), []);
+  const curriculumDocRef = useMemo(() => doc(db, 'content', 'curriculumData'), []);
 
   // --- Load Data from Firestore on Mount ---
   useEffect(() => {
@@ -38,11 +40,22 @@ export const DataProvider = ({ children }) => {
           await setDoc(aboutDocRef, DEFAULT_ABOUT_DATA);
           setAboutData(DEFAULT_ABOUT_DATA);
         }
+
+        // Load Curriculum Data
+        const curSnap = await getDoc(curriculumDocRef);
+        if (curSnap.exists()) {
+          setCurriculumData(curSnap.data());
+        } else {
+          await setDoc(curriculumDocRef, DEFAULT_CURRICULUM_DATA);
+          setCurriculumData(DEFAULT_CURRICULUM_DATA);
+        }
+
       } catch (error) {
         console.error("Error loading Firestore data:", error);
         // Fallback to defaults on error
         setSiteData(DEFAULT_SITE_DATA);
         setAboutData(DEFAULT_ABOUT_DATA);
+        setCurriculumData(DEFAULT_CURRICULUM_DATA);
       } finally {
         setLoading(false);
       }
@@ -63,11 +76,18 @@ export const DataProvider = ({ children }) => {
       }
     });
 
+    const unsubscribeCurriculum = onSnapshot(curriculumDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setCurriculumData(docSnap.data());
+      }
+    });
+
     return () => {
       unsubscribeSite();
       unsubscribeAbout();
+      unsubscribeCurriculum();
     };
-  }, [siteDocRef, aboutDocRef]);
+  }, [siteDocRef, aboutDocRef, curriculumDocRef]);
 
   // --- Update Functions (Now write to Firestore) ---
   const updateHero = async (title, desc, images) => {
@@ -90,6 +110,17 @@ export const DataProvider = ({ children }) => {
       console.log("About save successful!");
     } catch (error) {
       console.error("Error saving about data:", error);
+      alert("Gagal menyimpan: " + error.message);
+    }
+  };
+
+  const updateCurriculum = async (nData) => {
+    try {
+      console.log("Saving Curriculum data to Firestore:", nData);
+      await setDoc(curriculumDocRef, nData);
+      console.log("Curriculum save successful!");
+    } catch (error) {
+      console.error("Error saving curriculum data:", error);
       alert("Gagal menyimpan: " + error.message);
     }
   };
@@ -185,7 +216,7 @@ export const DataProvider = ({ children }) => {
   }
 
   return (
-    <DataContext.Provider value={{ siteData, updateHero, aboutData, updateAbout, updateLecturers, updatePrograms, updateHomeSections, updateNews, updateAgenda, updateAcademicCalendar, updateScholarship }}>
+    <DataContext.Provider value={{ siteData, updateHero, aboutData, updateAbout, curriculumData, updateCurriculum, updateLecturers, updatePrograms, updateHomeSections, updateNews, updateAgenda, updateAcademicCalendar, updateScholarship }}>
       {children}
     </DataContext.Provider>
   );
