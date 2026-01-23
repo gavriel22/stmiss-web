@@ -22,32 +22,8 @@ const AcademicHero = () => (
 );
 
 const ProgramsDetail = () => {
-    const programs = [
-        {
-            id: 1,
-            level: "Sarjana (S1)",
-            title: "Sarjana Teologi (S.Th)",
-            desc: "Program empat tahun yang memberikan dasar teologi biblika yang kuat, pembentukan karakter rohani, dan keterampilan pelayanan praktis.",
-            features: ["144 SKS", "Praktek Pelayanan 1 Tahun", "Konsentrasi: Pastoral & Misi"],
-            color: "border-blue-900 bg-blue-50"
-        },
-        {
-            id: 2,
-            level: "Magister (S2)",
-            title: "Magister Missiologi (M.Miss)",
-            desc: "Program pascasarjana yang dirancang untuk pendeta dan pemimpin pelayanan yang ingin mendalami strategi misi urban dan lintas budaya.",
-            features: ["42 SKS", "Tesis Riset Lapangan", "Kuliah Modular/Hybrid"],
-            color: "border-red-800 bg-red-50"
-        },
-        {
-            id: 3,
-            level: "Doktoral (S3)",
-            title: "Doktor Teologi (D.Th)",
-            desc: "Program riset tingkat lanjut untuk menghasilkan cendekiawan teologi yang mampu berkontribusi pada pemikiran teologis di konteks Asia.",
-            features: ["Disertasi", "Seminar Internasional", "Publikasi Jurnal Terakreditasi"],
-            color: "border-yellow-600 bg-yellow-50"
-        }
-    ];
+    const { siteData } = useData();
+    const programs = siteData?.programs || [];
 
     return (
         <section className="py-20 bg-white">

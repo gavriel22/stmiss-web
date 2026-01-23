@@ -75,7 +75,7 @@ export const Header = () => {
               <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">Tentang</p>
               <Link to="/about" className="block pl-4 py-2 hover:bg-gray-50 rounded" onClick={toggleMenu}>Tentang Kami</Link>
               <Link to="/program-studi" className="block pl-4 py-2 hover:bg-gray-50 rounded" onClick={toggleMenu}>Program Studi</Link>
-              <Link to="/kurikulum-kontekstual" className="block pl-4 py-2 hover:bg-gray-50 rounded" onClick={toggleMenu}>Kurikulum Kontekstual</Link>
+              <Link to="/kurikulum-kontekstual" className="block pl-4 py-2 hover:bg-gray-50 rounded" onClick={toggleMenu}>Kurikulum Modular</Link>
               <Link to="/dosen" className="block pl-4 py-2 hover:bg-gray-50 rounded" onClick={toggleMenu}>Dosen & Pengajar</Link>
             </div>
 
@@ -112,7 +112,7 @@ export const Footer = () => (
       </div>
       <div className="md:max-w-md text-left">
         <h3 className="text-white text-lg font-bold mb-4">Tentang STMiss</h3>
-        <p>Berkomitmen menyelenggarakan pendidikan tinggi teologi yang berkualitas, kontekstual, dan transformatif.</p>
+        <p>Berkomitmen menyelenggarakan pendidikan tinggi Kristen dengan konsep-konsep Missi yang Alkitabiah, berkualitas, kontekstual, dan transformatif.</p>
       </div>
     </div>
     <div className="text-center mt-10 border-t border-gray-800 pt-6 text-xs">

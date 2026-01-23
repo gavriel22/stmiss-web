@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Header, Footer } from '../components/Layout'; // Menggunakan Layout terpadu
 import { useData } from '../context/DataContext'; // Mengambil data yang bisa diedit
-import { ArrowRight, BookOpenText, Users, CalendarDays, MapPin, Phone, Mail } from 'lucide-react';
+import { ArrowRight, BookOpenText, Users, CalendarDays, MapPin, Phone, Mail, BookOpen, Blocks } from 'lucide-react';
 
 // --- Komponen Pendukung Halaman Utama (Adaptasi UKSW) ---
 
@@ -84,22 +84,31 @@ const StatsSection = ({ stats }) => {
         <section className="py-16 bg-white relative z-30 -mt-16 shadow-xl rounded-t-3xl container mx-auto px-4 max-w-6xl">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-gray-100">
                 {stats.map((stat, index) => {
-                    const Icon = index === 0 ? BookOpenText : (index === 1 ? Users : (index === 2 ? MapPin : Phone)); // Fallback icon mapping
+                    let IconComponent;
+                    if (index === 0) {
+                        // Custom Book with AI
+                        IconComponent = () => (
+                            <div className="relative mb-4 group-hover:scale-110 transition">
+                                <BookOpen size={40} className="text-yellow-500" />
+                                <span className="absolute -top-1 left-1/2 transform -translate-x-1/2 bg-white px-1 text-[10px] font-bold text-blue-900 border border-blue-100 rounded">AI</span>
+                            </div>
+                        );
+                    } else if (index === 2) {
+                        // Blocks (Kubus susun 3)
+                        IconComponent = () => <Blocks size={40} className="text-yellow-500 mb-4 group-hover:scale-110 transition" />;
+                    } else {
+                        // Default (Users for index 1)
+                        const Ico = Users;
+                        IconComponent = () => <Ico size={40} className="text-yellow-500 mb-4 group-hover:scale-110 transition" />;
+                    }
+
                     return (
-                        <div key={stat.id} className="flex flex-col items-center p-6 hover:bg-yellow-50 transition duration-300 cursor-pointer group">
-                            {stat.link?.startsWith('#') ? (
-                                <a href={stat.link} className="flex flex-col items-center">
-                                    <Icon size={40} className="text-yellow-500 mb-4 group-hover:scale-110 transition" />
-                                    <h3 className="text-xl font-bold text-blue-900 mb-2 group-hover:text-yellow-600 transition">{stat.title}</h3>
-                                    <p className="text-gray-600 text-sm">{stat.desc}</p>
-                                </a>
-                            ) : (
-                                <Link to={stat.link || "#"} className="flex flex-col items-center">
-                                    <Icon size={40} className="text-yellow-500 mb-4 group-hover:scale-110 transition" />
-                                    <h3 className="text-xl font-bold text-blue-900 mb-2 group-hover:text-yellow-600 transition">{stat.title}</h3>
-                                    <p className="text-gray-600 text-sm">{stat.desc}</p>
-                                </Link>
-                            )}
+                        <div key={stat.id} className="flex flex-col items-center p-6 hover:bg-yellow-50 transition duration-300 group">
+                            <div className="flex flex-col items-center">
+                                <IconComponent />
+                                <h3 className="text-xl font-bold text-blue-900 mb-2 transition">{stat.title}</h3>
+                                <p className="text-gray-600 text-sm">{stat.desc}</p>
+                            </div>
                         </div>
                     );
                 })}
@@ -217,7 +226,7 @@ const NewsEventsSection = ({ news, agenda }) => {
                 {/* Kolom Agenda */}
                 <Link to="/agenda" className="bg-blue-900 p-10 rounded-3xl text-white flex flex-col justify-between relative overflow-hidden group hover:shadow-xl transition duration-300 block">
                     {/* Background Pattern or Image can go here */}
-                    
+
                     {featuredAgenda ? (
                         <>
                             <div>
