@@ -88,7 +88,7 @@ export const Header = () => {
             </div>
 
             <Link to="https://stmiss.vercel.app/" target='_blank' className="bg-yellow-500 text-white px-4 py-3 rounded text-center hover:bg-yellow-600 font-bold mt-4" onClick={toggleMenu}>
-              Pendaftaran
+              Pendaftaran/Login
             </Link>
           </div>
         </div>
